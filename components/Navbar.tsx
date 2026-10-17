@@ -2,135 +2,90 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 interface NavbarProps {
-  onOpenBooking: () => void;
+  onOpenBooking?: () => void;
 }
 
 export default function Navbar({ onOpenBooking }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState('home');
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 60);
-
-      // Scrollspy
-      const sections = ['home', 'about', 'menu', 'food', 'community', 'visit'];
-      const scrollPos = window.scrollY + 140;
-
-      for (const sectionId of sections) {
-        const el = document.getElementById(sectionId);
-        if (el) {
-          const top = el.offsetTop;
-          const height = el.offsetHeight;
-          if (scrollPos >= top && scrollPos < top + height) {
-            setActiveSection(sectionId);
-            break;
-          }
-        }
-      }
+      setScrolled(window.scrollY > 40);
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleLinkClick = (href: string) => {
+  const handleLinkClick = () => {
     setMobileOpen(false);
-    if (href === '#book') {
-      onOpenBooking();
-      return;
-    }
+  };
 
-    const target = document.querySelector(href);
-    if (target) {
-      const offset = 80;
-      const targetPosition =
-        target.getBoundingClientRect().top + window.scrollY - offset;
-      window.scrollTo({
-        top: targetPosition,
-        behavior: 'smooth',
-      });
-    }
+  const isLinkActive = (href: string) => {
+    if (href === '/') return pathname === '/';
+    return pathname.startsWith(href);
   };
 
   return (
-    <nav className={`navbar ${scrolled ? 'scrolled' : ''}`} id="navbar">
-      <a
-        href="#home"
-        onClick={(e) => {
-          e.preventDefault();
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }}
-        className="nav-logo"
-      >
+    <nav className={`navbar ${scrolled || pathname !== '/' ? 'scrolled' : ''}`} id="navbar">
+      <Link href="/" className="nav-logo" onClick={handleLinkClick}>
         So Coffee
-      </a>
+      </Link>
 
       <div className={`nav-links ${mobileOpen ? 'open' : ''}`} id="navLinks">
-        <a
-          href="#home"
-          className={activeSection === 'home' ? 'active' : ''}
-          onClick={(e) => {
-            e.preventDefault();
-            handleLinkClick('#home');
-          }}
+        <Link
+          href="/"
+          className={isLinkActive('/') ? 'active' : ''}
+          onClick={handleLinkClick}
         >
           Home
-        </a>
-        <a
-          href="#menu"
-          className={activeSection === 'menu' ? 'active' : ''}
-          onClick={(e) => {
-            e.preventDefault();
-            handleLinkClick('#menu');
-          }}
+        </Link>
+        <Link
+          href="/menu"
+          className={isLinkActive('/menu') ? 'active' : ''}
+          onClick={handleLinkClick}
         >
           Menu
-        </a>
-        <a
-          href="#about"
-          className={activeSection === 'about' ? 'active' : ''}
-          onClick={(e) => {
-            e.preventDefault();
-            handleLinkClick('#about');
-          }}
+        </Link>
+        <Link
+          href="/about"
+          className={isLinkActive('/about') ? 'active' : ''}
+          onClick={handleLinkClick}
         >
           About
-        </a>
-        <a
-          href="#visit"
-          className={activeSection === 'visit' ? 'active' : ''}
-          onClick={(e) => {
-            e.preventDefault();
-            handleLinkClick('#visit');
-          }}
+        </Link>
+        <Link
+          href="/visit"
+          className={isLinkActive('/visit') ? 'active' : ''}
+          onClick={handleLinkClick}
         >
           Visit Us
-        </a>
-        <a
-          href="#book"
-          className="nav-book-link"
+        </Link>
+        <Link
+          href="/book"
+          className={`nav-book-link ${isLinkActive('/book') ? 'active' : ''}`}
           id="navBookBtn"
-          onClick={(e) => {
-            e.preventDefault();
-            handleLinkClick('#book');
+          onClick={() => {
+            handleLinkClick();
+            if (onOpenBooking && pathname === '/') {
+              onOpenBooking();
+            }
           }}
         >
           Book
-        </a>
-        <a
-          href="#menu"
+        </Link>
+        <Link
+          href="/menu"
           className="nav-cta"
-          onClick={(e) => {
-            e.preventDefault();
-            handleLinkClick('#menu');
-          }}
+          onClick={handleLinkClick}
         >
           View Menu
-        </a>
+        </Link>
       </div>
 
       <div

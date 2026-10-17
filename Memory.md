@@ -7,34 +7,48 @@ This file documents key milestones, context, architecture choices, and the curre
 ## 1. Project Genesis & Journey
 
 1. **Initial Objective**:
-   - The user requested a complete website for **So Coffee** located at Lucan Community Centre, Ireland, replicating the Figma concept design (`https://www.figma.com/make/7AUbPyXz5l9y8koZnZrQeD/SoCoffee-Website-Concept`).
+   - Replicate the Figma concept design (`https://www.figma.com/make/7AUbPyXz5l9y8koZnZrQeD/SoCoffee-Website-Concept`) for So Coffee inside Lucan Community Centre, Ireland.
 2. **Phase 1 (Design & Static Prototype)**:
-   - Extracted visual tokens, typography, and section structure from Figma captures.
-   - Generated high-resolution imagery for all key sections (interior cafe, latte art, coffee & pastries, sweet treats, light bites, cold drinks, slow moments, community).
-   - Built semantic HTML, handcrafted CSS design system, and vanilla JS interactions.
-3. **Phase 2 (Interactive Polish)**:
-   - Added interactive booking modal for tables/events.
-   - Wired Food & Drink highlight cards to automatically switch tabs and navigate to the menu.
-   - Integrated reliable Google Maps iframe embed for Lucan Community Centre.
-   - Added toast notification system and back-to-top floating button.
-4. **Phase 3 (Next.js & Supabase Migration)**:
-   - Migrated codebase to **Next.js App Router with TypeScript**.
-   - Modularized UI into decoupled React components (`Navbar`, `Hero`, `OurStory`, `MenuSection`, `FoodHighlights`, `EveryCup`, `Community`, `VisitUs`, `Footer`, `BookingModal`, `BackToTop`, `Toast`).
-   - Integrated Supabase client scaffolding, TypeScript database definitions (`types/supabase.ts`), and Next.js API routes (`/api/reservations`, `/api/menu`).
-   - Prepared `Agent.md`, `Memory.md`, `Prd.md`.
-   - Initialized Git repository targeting remote `https://github.com/ITWala2025/SoCafe.git`.
+   - Handcrafted CSS design system (`#2C2418` dark espresso, `#F5F0E8` cream foam, `#A67C3D` amber gold, *Playfair Display* & *Inter*).
+   - Generated high-resolution imagery for all key sections.
+3. **Phase 2 (Interactive Enhancements)**:
+   - Added interactive booking modal, toast notifications, food highlights filtering, and Google Map.
+4. **Phase 3 (Next.js & Supabase Backend Migration)**:
+   - Migrated to Next.js App Router with TypeScript.
+   - Decoupled into modular React components.
+   - Installed `@supabase/supabase-js` and `@supabase/ssr`, created `types/supabase.ts`, `lib/supabase/client.ts`, and `lib/supabase/server.ts`.
+5. **Phase 4 (Multi-Route Expansion & Admin Dashboard)**:
+   - **Multi-Route Public Experience**:
+     - `/` — Complete home landing page.
+     - `/menu` — Dedicated menu page with live search, dietary notices, and category tabs.
+     - `/about` — Dedicated about page with origin story, values grid, and photo gallery.
+     - `/visit` — Dedicated visit us page with opening hours, transit directions, map, and visitor FAQ.
+     - `/book` — Dedicated reservation page with full booking form, instant confirmation banner, and party guidelines.
+   - **Admin Management Portal (`/admin`)**:
+     - `/admin/login` — Manager sign-in workflow with one-click demo credentials (`admin@socoffee.ie` / `coffee123`) and Supabase Auth hook point.
+     - `/admin` — Protected management dashboard with 4 core tabs:
+       - **Overview**: Live stat metrics (Pending, Confirmed, Today's bookings, Active menu items), recent bookings table, quick action buttons.
+       - **Reservations & Bookings**: Status filtering (All, Pending, Confirmed, Cancelled), search by guest name/email, quick Confirm/Cancel/Delete buttons, detail drawer.
+       - **Menu Management**: Filter by category, Add Menu Item modal, Edit Menu Item modal, In-Stock/Sold-Out toggle button, delete confirmation.
+       - **Settings & Announcements**: Today's announcement banner update, Supabase PostgreSQL runtime status monitor.
+   - **API CRUD Operations**:
+     - `/api/reservations` — GET, POST, PATCH, DELETE.
+     - `/api/menu` — GET, POST, PUT, DELETE.
+   - **Updated Documentation**: `Prd.md` and `Memory.md` updated to reflect the full feature set.
 
 ---
 
 ## 2. Core Architectural Decisions
 
-- **Framework Choice**: Next.js App Router (React 19 / 18, TypeScript) providing first-class SEO, server-side data fetching, API route endpoints, and production performance.
-- **Styling Architecture**: Custom CSS Design System (`app/globals.css`) instead of utility libraries to maintain exact pixel-fidelity with the Figma prototype and artisanal typography.
-- **Typography Strategy**: `next/font/google` loading *Playfair Display* and *Inter* with `swap` display and zero layout shift.
-- **Supabase Backend Strategy**:
-  - Typed Supabase client (`Database` interface matching PostgreSQL tables).
-  - Graceful dev/fallback mode: when Supabase environment variables are missing, the app operates without error using static menu data and simulated reservation handling.
-  - Server-side route handler `/api/reservations` handles reservation insertion and database persistence securely.
+- **Multi-Route Navigation**:
+  - `Navbar.tsx` dynamically highlights the active route using `usePathname()` from `next/navigation`.
+  - Footer provides direct navigation links to all public routes and a discreet Manager Portal link.
+- **Admin Authentication**:
+  - Managed via `lib/auth/admin.tsx` using `useAdminAuth` hook and session persistence.
+  - Architecture is decoupled so café staff can immediately log in with demo credentials, and when Supabase Auth is enabled, swapping to `supabase.auth.signInWithPassword` requires zero UI changes.
+- **Graceful Fallback Backend**:
+  - Full CRUD operations work in local dev via in-memory stores if Supabase credentials are not provided in `.env.local`.
+  - When Supabase credentials are provided, calls seamlessly persist to PostgreSQL tables (`menu_items`, `reservations`).
 
 ---
 
@@ -45,15 +59,13 @@ This file documents key milestones, context, architecture choices, and the curre
 
 ---
 
-## 4. Current State & What's Next
+## 4. Current State & Verification
 
-- [x] Next.js App Router migration completed
-- [x] TypeScript database definitions (`types/supabase.ts`)
-- [x] Client & Server Supabase helpers (`lib/supabase/`)
-- [x] API route handlers (`/api/reservations`, `/api/menu`)
-- [x] Components modularized & interactive
-- [x] Google Maps & location details verified
-- [x] Documentation (`Agent.md`, `Memory.md`, `Prd.md`)
-- [ ] Connect live Supabase project by updating `.env.local` with `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-- [ ] Run Supabase database migration scripts (table schemas provided in `Prd.md`)
-- [ ] Push commits to `https://github.com/ITWala2025/SoCafe`
+- [x] Multi-route pages operational (`/`, `/menu`, `/about`, `/visit`, `/book`)
+- [x] Admin Login Portal operational (`/admin/login`)
+- [x] Admin Dashboard operational (`/admin`) with Overview, Bookings, Menu, Settings tabs
+- [x] Menu update options (Add, Edit, Delete, Stock toggle) live
+- [x] Booking management (List, Filter, Confirm, Cancel, Delete, Detail view) live
+- [x] Full CRUD API routes (`/api/reservations`, `/api/menu`)
+- [x] Production build passes with 0 errors (`npm run build`)
+- [x] `Prd.md` and `Memory.md` updated

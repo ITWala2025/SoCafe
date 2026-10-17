@@ -1,28 +1,21 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 
 interface FooterProps {
-  onOpenBooking: () => void;
+  onOpenBooking?: () => void;
 }
 
 export default function Footer({ onOpenBooking }: FooterProps) {
-  const scrollTo = (id: string) => {
-    const el = document.getElementById(id);
-    if (el) {
-      const offset = 80;
-      const targetPosition =
-        el.getBoundingClientRect().top + window.scrollY - offset;
-      window.scrollTo({ top: targetPosition, behavior: 'smooth' });
-    }
-  };
-
   return (
     <footer className="footer">
       <div className="container">
         <div className="footer-top">
           <div className="footer-brand">
-            <h3 className="footer-logo">So Coffee</h3>
+            <Link href="/" className="footer-logo">
+              So Coffee
+            </Link>
             <p>
               A cosy little café inside Lucan Community Centre, serving great
               coffee and warm welcomes.
@@ -31,91 +24,28 @@ export default function Footer({ onOpenBooking }: FooterProps) {
           <div className="footer-nav">
             <div className="footer-nav-col">
               <h4>Menu</h4>
-              <a
-                href="#menu"
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollTo('menu');
-                }}
-              >
-                Hot Drinks
-              </a>
-              <a
-                href="#menu"
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollTo('menu');
-                }}
-              >
-                Cold Drinks
-              </a>
-              <a
-                href="#food"
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollTo('food');
-                }}
-              >
-                Food
-              </a>
-              <a
-                href="#food"
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollTo('food');
-                }}
-              >
-                Sweet Treats
-              </a>
+              <Link href="/menu">Full Menu</Link>
+              <Link href="/menu">Hot Drinks</Link>
+              <Link href="/menu">Cold Drinks</Link>
+              <Link href="/menu">Food & Treats</Link>
             </div>
             <div className="footer-nav-col">
               <h4>Visit</h4>
-              <a
-                href="#about"
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollTo('about');
-                }}
-              >
-                Our Story
-              </a>
-              <a
-                href="#visit"
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollTo('visit');
-                }}
-              >
-                Location
-              </a>
-              <a
-                href="#visit"
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollTo('visit');
-                }}
-              >
-                Opening Hours
-              </a>
-              <a
-                href="#community"
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollTo('community');
-                }}
-              >
-                Community
-              </a>
-              <a
-                href="#book"
+              <Link href="/about">Our Story</Link>
+              <Link href="/visit">Location & Map</Link>
+              <Link href="/visit">Opening Hours</Link>
+              <Link
+                href="/book"
                 className="footer-book-link"
                 onClick={(e) => {
-                  e.preventDefault();
-                  onOpenBooking();
+                  if (onOpenBooking) {
+                    e.preventDefault();
+                    onOpenBooking();
+                  }
                 }}
               >
                 Book a Space
-              </a>
+              </Link>
             </div>
             <div className="footer-nav-col">
               <h4>Connect</h4>
@@ -134,6 +64,9 @@ export default function Footer({ onOpenBooking }: FooterProps) {
                 Facebook
               </a>
               <a href="mailto:hello@socoffee.ie">Email Us</a>
+              <Link href="/admin" style={{ opacity: 0.6, fontSize: '0.8rem' }}>
+                Manager Portal ↗
+              </Link>
             </div>
           </div>
         </div>

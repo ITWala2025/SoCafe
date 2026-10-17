@@ -2,7 +2,7 @@
 
 **Product Name**: So Coffee Website & Digital Hub  
 **Location**: Lucan Community Centre, Esker Lane, Lucan, Co. Dublin, Ireland  
-**Version**: 1.0.0 (Next.js & Supabase Edition)  
+**Version**: 2.0.0 (Multi-Route & Admin Dashboard Edition)  
 **Target URL**: `https://socoffee.ie` (Production) / `http://localhost:3000` (Local)  
 **Repository**: `https://github.com/ITWala2025/SoCafe`
 
@@ -10,16 +10,19 @@
 
 ## 1. Executive Summary & Vision
 
-**So Coffee** is a community-first specialty café located inside the Lucan Community Centre. The website serves as the café's digital storefront, conveying its warm, cosy, and artisanal atmosphere. It enables local visitors, community members, and groups to browse the daily food and drink menu, discover the café's story, find location and operating hours, and request table or community room reservations.
+**So Coffee** is a community-first specialty café located inside the Lucan Community Centre. The website serves as the café's complete digital storefront and management platform. It enables local visitors, community members, and groups to browse the daily food and drink menu across dedicated routes, learn about the café's history and ethos, plan their visit with transit details, and book tables or community spaces.
+
+In addition, it provides a protected **Admin Dashboard** (`/admin`) for café managers to review incoming bookings, confirm or cancel reservations, update live menu items (add, edit, delete, toggle stock), and post daily announcements.
 
 ---
 
 ## 2. Target Audience & Personas
 
-1. **Local Residents & Families**: Seeking a welcoming morning coffee stop, fresh pastries, and a child-friendly atmosphere in Lucan.
+1. **Local Residents & Families**: Seeking a welcoming morning coffee stop, fresh pastries, and child-friendly seating in Lucan.
 2. **Community Centre Visitors**: Attendees of sports, fitness classes, workshops, and local clubs looking for a cosy meeting spot before or after activities.
-3. **Remote Workers & Freelancers**: Looking for quiet corners with good coffee, wifi, and hearty lunch bites (soups, wraps, quiches).
+3. **Remote Workers & Freelancers**: Looking for quiet corners with good coffee, complimentary Wi-Fi, and hearty lunch bites.
 4. **Community Organizers**: Needing group tables or meeting rooms reserved for gatherings, study circles, or book clubs.
+5. **Café Managers & Baristas**: Needing a fast, accessible Admin Dashboard on tablet, phone, or laptop to manage daily inventory, mark sold-out items, and confirm guest table requests.
 
 ---
 
@@ -38,69 +41,117 @@
 
 ---
 
-## 4. Feature Specifications
+## 4. Route Architecture & Feature Specifications
 
-### 4.1 Header & Navigation (`components/Navbar.tsx`)
-- Fixed sticky navbar with glassmorphism blur upon scrolling down.
-- Navigation links: Home, Menu, About, Visit Us, Book, and "View Menu" CTA button.
-- Smooth scrolling with offset compensation to target sections.
-- Mobile slide-out drawer menu with hamburger toggle button.
-- Active-section scrollspy dynamically highlighting the current view.
-
-### 4.2 Hero Section (`components/Hero.tsx`)
-- High-impact visual banner with subtle parallax scroll effect.
-- Location badge: `📍 LUCAN COMMUNITY CENTRE, IRELAND`.
-- Display headline: *"Coffee, comfort & good food."*
-- Explanatory subhead and dual CTAs: *"View Our Menu"* and *"Find Us"*.
-- Animated vertical scroll indicator.
-
-### 4.3 Our Story (`components/OurStory.tsx`)
-- Two-column layout showcasing artisanal latte art photography with an *"Every cup, crafted."* badge.
-- Brand story emphasizing warmth, simple quality drinks, and community roots.
-
-### 4.4 Interactive Menu (`components/MenuSection.tsx`)
-- Category tabs:
-  - **Hot Drinks** (Espresso, Cappuccino, Latte, Americano, Flat White, Hot Chocolate, Barry's Tea).
-  - **Cold Drinks** (Iced Latte, Iced Americano, Cold Brew, Iced Mocha, Smoothie, Fresh Juice).
-  - **Food** (Toasted Sandwich, Soup of the Day, Sausage Roll, Wrap, Quiche, Salad Bowl).
-  - **Sweet Treats** (Scone, Croissant, Muffin, Brownie, Cookie, Cake Slice).
-- Animated card grid with item titles, descriptions, and counter pricing notes.
-- Backed by Next.js API route `/api/menu` supporting live Supabase synchronization with local fallback.
-
-### 4.5 Food & Drink Highlights (`components/FoodHighlights.tsx`)
-- 4 photography cards: *Coffee & Pastries*, *Sweet Treats*, *Light Bites*, *Cold Drinks*.
-- Interactive click triggers: switches the active menu tab and scrolls smoothly to the menu section.
-
-### 4.6 Every Cup Atmospheric Banner (`components/EveryCup.tsx`)
-- Full-width background image with dark overlay and typography: *"Made for slow moments"*.
-
-### 4.7 Community Section (`components/Community.tsx`)
-- Highlights the café's role inside Lucan Community Centre rhythm.
-- Visual badge and quote: *"'Your little coffee stop in Lucan.'"*
-
-### 4.8 Visit Us & Location (`components/VisitUs.tsx`)
-- 4-item information grid:
-  - Location: Lucan Community Centre, Esker Lane, Lucan, Co. Dublin, Ireland.
-  - Hours: Mon–Fri 8:00 AM – 4:00 PM; Sat–Sun 9:00 AM – 3:00 PM.
-  - Contact: Clickable email `hello@socoffee.ie`.
-  - Social: Clickable Instagram `@socoffee.lucan`.
-- Embedded Google Maps iframe pinpointing Lucan Community Centre.
-
-### 4.9 Table & Space Booking Modal (`components/BookingModal.tsx`)
-- Accessible dialog for table and group space reservations.
-- Form inputs: Name, Email, Phone, Number of People, Date, Preferred Time, Special Notes.
-- Form validation, loading states, and keyboard escape handling.
-- API submission to `/api/reservations` backed by Supabase with live toast notification feedback.
-
-### 4.10 Toast System & Back-to-Top
-- Global toast notifications (`components/Toast.tsx`) triggered on user interactions.
-- Floating back-to-top button (`components/BackToTop.tsx`) visible after scrolling 400px.
+### 4.1 Global Navigation (`components/Navbar.tsx`)
+- Fixed sticky navbar with glassmorphism blur upon scroll.
+- Active route highlighting based on `usePathname()`.
+- Dedicated links:
+  - **Home**: `/`
+  - **Menu**: `/menu`
+  - **About**: `/about`
+  - **Visit Us**: `/visit`
+  - **Book**: `/book`
+  - **View Menu (CTA)**: `/menu`
+- Mobile drawer menu with animated toggle button.
 
 ---
 
-## 5. Supabase Backend Architecture & Database Schema
+### 4.2 Route Pages
 
-### 5.1 Tables
+#### 1. Home Page (`/`)
+- Full landing page experience with Hero banner, Our Story preview, interactive menu preview, food cards, atmospheric Every Cup banner, Community highlight, Visit section, and footer.
+
+#### 2. Dedicated Menu Page (`/menu`)
+- Hero header with *"What We Serve"* and daily preparation notes.
+- **Live Search & Filter**: Instant search box filtering items by name or description.
+- **Category Tabs**: Hot Drinks, Cold Drinks, Food, Sweet Treats with item count badges.
+- **Item Cards**: Displays name, price, description, and "Sold Out Today" availability badges.
+- **Dietary & Allergen Callout**: Details on Oat/Almond milk alternatives, vegetarian choices, and allergen safety.
+- Direct booking CTA linking to `/book`.
+
+#### 3. Dedicated About Page (`/about`)
+- *"A Little Break Goes a Long Way"* narrative detailing the origin inside Lucan Community Centre.
+- **Core Values Grid**:
+  1. *Specialty Coffee & Honest Food*
+  2. *A Genuinely Warm Welcome*
+  3. *Community First*
+- **Photography Gallery**: Highlights of interior seating, community members, and artisanal latte art.
+
+#### 4. Dedicated Visit Us Page (`/visit`)
+- Opening hours grid (Monday–Friday 8am–4pm, Saturday–Sunday 9am–3pm).
+- Full address with postal code (Esker Lane, Lucan, Co. Dublin, K78 H3F6).
+- **Getting Here & Transit**: Free customer car parking, Dublin Bus routes (C1, C2, L53), and wheelchair/stroller accessibility.
+- Embedded interactive Google Map.
+- **Visitor FAQ**: Answers regarding complimentary Wi-Fi, milk alternatives, stroller access, and group seating.
+
+#### 5. Dedicated Reservation Page (`/book`)
+- Dedicated full-width booking card with complete reservation form:
+  - Full Name, Email, Phone Number, Party Size (1-2, 3-4, 5-8, 9+ community room inquiry).
+  - Date Picker with minimum date validation, Time Slot selector.
+  - Special requests & notes (high chairs, quiet table, pre-ordered food).
+- **Instant Confirmation Banner**: Replaces form with booking summary upon submission.
+- **Sidebar Guide**: Helpful walk-in tips, recurring club info, and Lucan Community Centre catering details.
+
+---
+
+### 4.3 Admin Portal & Dashboard (`/admin`)
+
+#### 1. Admin Authentication (`/admin/login`)
+- Dedicated manager login screen styled with So Coffee branding.
+- Form inputs for Manager Email and Password.
+- **One-Click Demo Button**: Instantly fills credentials (`admin@socoffee.ie` / `coffee123`) for effortless review.
+- Error banner handling for invalid credentials.
+- **Supabase Auth Migration Ready**: Structured with `useAdminAuth` hook ready for `supabase.auth.signInWithPassword`.
+- Automatic redirect to `/admin` upon successful sign in, and redirect to `/admin/login` if unauthenticated.
+
+#### 2. Dashboard Shell & Top Bar
+- Brand badge: *"So Coffee ADMIN DASHBOARD"*.
+- Active manager identity display (Name, Email).
+- "View Live Site" quick link and "Sign Out" button.
+- Global toast notification banner for actions.
+
+#### 3. Dashboard Tabs:
+- **📊 Overview**:
+  - Live metric stat cards: *Pending Bookings*, *Confirmed Bookings*, *Today's Reservations*, *Active Menu Items*.
+  - Management shortcuts (+ Add Menu Item, Review Bookings).
+  - Recent reservation requests table with quick Confirm and View buttons.
+- **📅 Reservations & Bookings**:
+  - Status filter pills: *All*, *Pending*, *Confirmed*, *Cancelled* with live count counters.
+  - Search box filtering bookings by guest name or email.
+  - Comprehensive data table displaying guest name, contact, date, time, party size, and status badge.
+  - Quick actions: **Confirm**, **Cancel**, **Delete**.
+  - **Slide-out Detail Drawer**: Displays full booking details, notes, phone, and direct email link.
+- **☕ Menu Management**:
+  - Category filter pills: *All Items*, *Hot Drinks*, *Cold Drinks*, *Food*, *Sweet Treats*.
+  - **Add Menu Item Modal**: Name, Category, Description, and Display Price.
+  - **Edit Menu Item Modal**: Pre-filled form to update names, prices, or descriptions.
+  - **Availability Toggle Button**: One-click toggle between *● In Stock* and *○ Sold Out*.
+  - **Delete Action**: Removes item with confirmation modal.
+- **⚙️ Settings & Announcements**:
+  - Today's announcement banner editor (updates broadcast notice).
+  - Database status monitor (Supabase PostgreSQL runtime & fallback status).
+
+---
+
+## 5. API Route Specifications
+
+### 5.1 `/api/reservations`
+- **GET**: Returns all reservations (Admin view).
+- **POST**: Creates a new reservation (Guest submission).
+- **PATCH**: Updates reservation status (`status: 'confirmed' | 'cancelled'`) by `id`.
+- **DELETE**: Deletes a reservation by `id`.
+- *Supports Supabase `reservations` table with in-memory fallback for local dev.*
+
+### 5.2 `/api/menu`
+- **GET**: Returns menu items grouped by category, or flat list when `?flat=true`.
+- **POST**: Adds a new menu item to Supabase `menu_items` table or in-memory store.
+- **PUT**: Updates existing menu item name, desc, price, or `is_available` flag.
+- **DELETE**: Deletes a menu item by `id`.
+
+---
+
+## 6. Supabase Backend Architecture & Database Schema
 
 ```sql
 -- 1. Categories
@@ -138,25 +189,14 @@ CREATE TABLE reservations (
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
--- 4. Contact Messages (Optional Extension)
-CREATE TABLE contact_messages (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  name TEXT NOT NULL,
-  email TEXT NOT NULL,
-  message TEXT NOT NULL,
-  created_at TIMESTAMPTZ DEFAULT now()
-);
+-- 4. Admin Users (Managed via Supabase Auth)
+-- Uses auth.users table with app metadata role = 'manager'
 ```
-
-### 5.2 Row Level Security (RLS) Policies
-- `menu_items` & `categories`: Public read access (`SELECT`) enabled for anon users.
-- `reservations`: Public insert (`INSERT`) enabled for anon users; read/update restricted to authenticated café staff.
 
 ---
 
-## 6. Non-Functional Requirements
+## 7. Non-Functional Requirements
 
-- **Performance**: Lighthouse score 90+ on desktop and mobile. Zero cumulative layout shift.
-- **Accessibility**: Semantic HTML5 landmark tags (`<nav>`, `<main>`, `<section>`, `<footer>`), ARIA attributes for modal and live toast regions.
-- **SEO**: Dynamic metadata, OpenGraph tags, semantic headings, and favicon configured in `app/layout.tsx`.
-- **Browser Compatibility**: Chrome, Safari, Firefox, Edge, iOS Safari, Android Chrome.
+- **Performance**: Zero-bundle font loading with `next/font/google`, static generation for public pages.
+- **Accessibility**: Semantic landmark elements, ARIA dialog roles, accessible keyboard navigation for tabs and modals.
+- **SEO**: Metadata, OpenGraph cards, and keywords configured for Lucan Community Centre and So Coffee.

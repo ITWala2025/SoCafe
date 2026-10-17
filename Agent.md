@@ -22,12 +22,20 @@ Welcome to **So Coffee** (`SoCafe`). This document provides operational guidelin
 ```
 SoCafe/
 ├── app/
+│   ├── about/page.tsx               # Dedicated /about route page
+│   ├── admin/
+│   │   ├── layout.tsx               # Admin shell layout with AdminAuthProvider
+│   │   ├── login/page.tsx           # Manager login portal with demo credentials
+│   │   └── page.tsx                 # Full Admin Dashboard (Overview, Bookings, Menu, Settings)
 │   ├── api/
-│   │   ├── menu/route.ts            # GET /api/menu (live Supabase or fallback)
-│   │   └── reservations/route.ts    # POST /api/reservations (saves to Supabase)
+│   │   ├── menu/route.ts            # CRUD /api/menu (GET, POST, PUT, DELETE)
+│   │   └── reservations/route.ts    # CRUD /api/reservations (GET, POST, PATCH, DELETE)
+│   ├── book/page.tsx                # Dedicated /book route page with reservation form
+│   ├── menu/page.tsx                # Dedicated /menu route page with search & filters
+│   ├── visit/page.tsx               # Dedicated /visit route page with transit & FAQ
 │   ├── globals.css                  # Core CSS design system & component styles
 │   ├── layout.tsx                   # Root layout, fonts, meta & ToastProvider
-│   └── page.tsx                     # Main page composing sections
+│   └── page.tsx                     # Main landing page composing sections
 ├── components/
 │   ├── BackToTop.tsx                # Floating smooth-scroll button
 │   ├── BookingModal.tsx             # Interactive reservation dialog
