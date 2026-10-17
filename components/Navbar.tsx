@@ -69,10 +69,10 @@ export default function Navbar({ onOpenBooking }: NavbarProps) {
         <Link
           href="/book"
           className={`nav-book-link ${isLinkActive('/book') ? 'active' : ''}`}
-          id="navBookBtn"
-          onClick={() => {
+          onClick={(e) => {
             handleLinkClick();
-            if (onOpenBooking && pathname === '/') {
+            if (onOpenBooking) {
+              e.preventDefault();
               onOpenBooking();
             }
           }}

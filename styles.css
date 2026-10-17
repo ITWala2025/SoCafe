@@ -407,6 +407,171 @@ img {
   font-style: italic;
   font-size: 0.95rem;
   color: var(--color-dark-brown);
+  z-index: 3;
+}
+
+/* Coffee Steam Animation */
+.coffee-steam-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.coffee-steam-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+.coffee-steam-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+.steam-wisp {
+  transform-origin: 50% 65%;
+  will-change: transform, opacity;
+}
+
+.steam-wisp-1 {
+  animation: steamRise1 4.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation-delay: -0.6s;
+}
+
+.steam-wisp-2 {
+  animation: steamRise2 5.0s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation-delay: -2.1s;
+}
+
+.steam-wisp-3 {
+  animation: steamRise3 4.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation-delay: -1.3s;
+}
+
+.steam-wisp-4 {
+  animation: steamRise4 3.9s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation-delay: -3.0s;
+}
+
+.steam-wisp-5 {
+  animation: steamRise5 5.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation-delay: -1.8s;
+}
+
+@keyframes steamRise1 {
+  0% {
+    transform: translateY(15px) translateX(0px) scale(0.9, 0.85);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(-40px) translateX(-14px) scale(1.15, 1.2);
+    opacity: 0.45;
+  }
+  80% {
+    opacity: 0.2;
+  }
+  100% {
+    transform: translateY(-95px) translateX(8px) scale(1.35, 1.45);
+    opacity: 0;
+  }
+}
+
+@keyframes steamRise2 {
+  0% {
+    transform: translateY(20px) translateX(0px) scale(0.85, 0.85);
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.7;
+  }
+  55% {
+    transform: translateY(-45px) translateX(12px) scale(1.1, 1.25);
+    opacity: 0.5;
+  }
+  85% {
+    opacity: 0.18;
+  }
+  100% {
+    transform: translateY(-110px) translateX(-10px) scale(1.4, 1.5);
+    opacity: 0;
+  }
+}
+
+@keyframes steamRise3 {
+  0% {
+    transform: translateY(10px) translateX(0px) scale(0.9, 0.9);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.55;
+  }
+  50% {
+    transform: translateY(-38px) translateX(16px) scale(1.2, 1.15);
+    opacity: 0.38;
+  }
+  80% {
+    opacity: 0.15;
+  }
+  100% {
+    transform: translateY(-90px) translateX(-6px) scale(1.45, 1.4);
+    opacity: 0;
+  }
+}
+
+@keyframes steamRise4 {
+  0% {
+    transform: translateY(18px) translateX(0px) scale(0.9, 0.85);
+    opacity: 0;
+  }
+  22% {
+    opacity: 0.5;
+  }
+  52% {
+    transform: translateY(-35px) translateX(-10px) scale(1.15, 1.2);
+    opacity: 0.35;
+  }
+  82% {
+    opacity: 0.12;
+  }
+  100% {
+    transform: translateY(-85px) translateX(6px) scale(1.3, 1.35);
+    opacity: 0;
+  }
+}
+
+@keyframes steamRise5 {
+  0% {
+    transform: translateY(12px) translateX(0px) scale(0.85, 0.9);
+    opacity: 0;
+  }
+  28% {
+    opacity: 0.55;
+  }
+  60% {
+    transform: translateY(-42px) translateX(-12px) scale(1.25, 1.3);
+    opacity: 0.32;
+  }
+  85% {
+    opacity: 0.14;
+  }
+  100% {
+    transform: translateY(-100px) translateX(14px) scale(1.5, 1.55);
+    opacity: 0;
+  }
 }
 
 .story-content {

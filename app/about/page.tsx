@@ -6,6 +6,7 @@ import Footer from '@/components/Footer';
 import BackToTop from '@/components/BackToTop';
 import ScrollRevealInit from '@/components/ScrollRevealInit';
 import Link from 'next/link';
+import CoffeeSteam from '@/components/CoffeeSteam';
 
 export default function AboutPage() {
   return (
@@ -35,6 +36,7 @@ export default function AboutPage() {
                   alt="Specialty latte art crafted at So Coffee"
                   loading="lazy"
                 />
+                <CoffeeSteam />
                 <span className="story-image-label">Every cup, crafted.</span>
               </div>
               <div className="story-content">

@@ -61,6 +61,10 @@ In addition, it provides a protected **Admin Dashboard** (`/admin`) for café ma
 
 #### 1. Home Page (`/`)
 - Full landing page experience with Hero banner, Our Story preview, interactive menu preview, food cards, atmospheric Every Cup banner, Community highlight, Visit section, and footer.
+- **Hero CTA Route Mappings**:
+  - Primary CTA (*"View Our Menu"*): Direct client-side route navigation to `/menu`.
+  - Secondary CTA (*"Find Us"*): Direct client-side route navigation to `/visit`.
+
 
 #### 2. Dedicated Menu Page (`/menu`)
 - Hero header with *"What We Serve"* and daily preparation notes.
@@ -85,8 +89,16 @@ In addition, it provides a protected **Admin Dashboard** (`/admin`) for café ma
 - Embedded interactive Google Map.
 - **Visitor FAQ**: Answers regarding complimentary Wi-Fi, milk alternatives, stroller access, and group seating.
 
-#### 5. Dedicated Reservation & Event Hosting Page (`/book`)
-The booking interface features a dual-mode segmented workflow allowing customers and community groups to effortlessly choose between table reservations and full event hosting proposals.
+#### 5. Dedicated Reservation & Event Hosting Route (`/book`)
+The `/book` route is structured as an instant modal route:
+- **Instant Single-Click Activation**: Clicking "Book" or "Book a Space" on the application immediately renders the **Booking Modal** on the first click (0ms latency, bypassing Next.js dev server cache compilation pauses).
+- **URL Synchronization**: Updates the browser address bar to `/book` via `window.history.pushState`, supporting direct linking and bookmarks.
+- **Direct Visits**: Direct navigation or browser reloads on `/book` immediately render the page with the modal pre-opened.
+- **Return & Dismissal**: When dismissed (close `×` button, Escape key, backdrop click, or browser Back button via `popstate`), the modal dismisses instantly and synchronizes the URL back to `/`.
+
+The modal features an intuitive dual-mode segmented workflow allowing customers and community groups to effortlessly choose between table reservations and full event hosting proposals:
+
+
 
 ##### Workflow A: Book a Table (Casual Dining & Catch-Ups)
 - **Target Audience**: Individuals, couples, families, remote workers, and small casual groups (1 to 8 guests).

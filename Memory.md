@@ -73,12 +73,50 @@ This file documents key milestones, context, architecture choices, and the curre
      - `Prd.md` updated with the left-sidebar admin architecture, simplified event booking specifications, corporate event taxonomy, and outside venue logistics.
      - `Agent.md` updated with mandatory requirement for reviewing and updating `Memory.md` and `Prd.md` after every feature implementation.
 
+7. **Phase 7 (Home Page Hero CTA Route Mapping)**:
+   - **Hero CTAs Route Mapping (`components/Hero.tsx`)**:
+     - Converted in-page scroll buttons into dedicated Next.js `<Link>` components:
+       - *"View Our Menu"* (`.btn-primary`) now routes directly to `/menu`.
+       - *"Find Us"* (`.btn-secondary`) now routes directly to `/visit`.
+     - Removed obsolete in-page `scrollTo` logic to ensure clean client-side navigation.
+
+8. **Phase 8 (/book Route Converted to Auto-Opening Booking Modal)**:
+   - **Converted `/book` Page to Modal Route (`app/book/page.tsx`)**:
+     - Converted `/book` from a separate standalone page form into an auto-opening modal experience.
+     - Navigating to `/book` mounts the page with `BookingModal isOpen={true}` over the backdrop.
+     - Closing the modal (via close button, Escape key, or backdrop click) smoothly navigates back to `/` or the previous view (`router.back()` / `router.push('/')`).
+     - Submitting a booking or event proposal triggers the success toast notification and returns the guest to the homepage.
+     - Updated `Navbar.tsx` and `Footer.tsx` navigation links so clicking 'Book' / 'Book a Space' routes to `/book` and launches the modal.
+
+9. **Phase 9 (Single-Click Instant Modal Opening & Dev Cache-Bypass Fix)**:
+   - **Issue Resolved**:
+     - Previously, clicking "Book" on `/` attempted a full route navigation to `/book`, triggering Next.js dev server on-the-fly component compilation (`Route /book is rendering with server caches disabled... cache-bypass-in-dev`), which caused a noticeable latency where users felt they had to click twice.
+   - **Solution Implemented**:
+     - **Navbar & Footer**: On click, `e.preventDefault()` intercepts the click when `onOpenBooking` is active, immediately opening `BookingModal` in **zero milliseconds** on the very first click.
+     - **URL Synchronization**: Updates the address bar to `/book` via `window.history.pushState(null, '', '/book')`, keeping the `/book` route intact.
+     - **Return on Close**: When the modal closes, URL reverts to `/` via `window.history.pushState(null, '', '/')` or browser `popstate`.
+     - **Direct /book Navigation**: `app/book/page.tsx` renders `<HomePage initialBookingOpen={true} />`, instantly opening the modal if a user visits `/book` directly or refreshes.
+   - **Documentation & Verification**:
+     - Updated `Prd.md` and `Memory.md` per mandatory instructions in `Agent.md`.
+
+10. **Phase 10 (`/visit` Route Redesign & Alignment)**:
+   - **Aesthetic & Brand Harmony**: Redesigned `/visit` to impeccably honor So Coffee's warm espresso, cream foam, and artisanal amber palette without deviating from the design system.
+   - **Hero & Live Hours Status**: Added hero banner with real-time Dublin time calculation badge (`🟢 Open Now` / `🕒 Closed Now`), breadcrumbs, and 4 quick chips (Specialty Coffee & Bakes, 50+ Free Parking Spaces, Dublin Bus C1/C2/L53, 100% Step-Free Access).
+   - **Balanced 2x2 Experience Grid**:
+     - **Top Row**: Location & Entrance Wayfinding Card (Address, Eircode `K78 H3F6`, one-click Copy Address with toast notification, Google/Apple Map buttons, and inside-centre direction guide) alongside an interactive Google Maps card.
+     - **Second Row (Side by Side)**: Compact Opening Hours Card (Mon–Fri 8am–4pm, Sat–Sun 9am–3pm, Bank Holidays 9am–2pm with active "Today" badge and kitchen notes) side by side with Contact & Enquiries Card (Email, Instagram, Venue Desk, Walk-ins, and "Reserve Space ↗" link).
+   - **Standard Document Flow (No Sticky Overlap)**: Removed sticky positioning from the map container, ensuring smooth, natural page scrolling with zero image or card collision.
+   - **Transit & Amenities**: Added 4 transit cards (Car, Bus, Cycle/Walk, Step-Free Accessibility) and 6 visitor amenities cards (Wi-Fi, Power outlets, Family friendly, Plant-based milks, Assistance dogs, KeepCup discounts).
+   - **Community Synergy & Interactive FAQ**: Integrated "The Social Living Room of Lucan Community Centre" spotlight and an interactive expandable FAQ accordion.
+
 ---
 
 ## 2. Core Architectural Decisions
 
 - **Multi-Route Navigation**:
   - `Navbar.tsx` dynamically highlights the active route using `usePathname()` from `next/navigation`.
+  - Hero section CTA buttons on `/` seamlessly route to `/menu` and `/visit`.
+  - `/book` route serves as the interactive modal route that immediately displays the dual-mode Booking Modal with zero compilation pause.
   - Footer provides direct navigation links to all public routes and a discreet Manager Portal link.
 - **Admin Left-Sidebar Layout**:
   - Fixed left navigation (`260px` width) for administrative clarity, with instant tab switching, live badges, and quick links.
@@ -101,8 +139,11 @@ This file documents key milestones, context, architecture choices, and the curre
 ## 4. Current State & Verification
 
 - [x] Multi-route pages operational (`/`, `/menu`, `/about`, `/visit`, `/book`)
+- [x] Single-click instant modal opening (0ms latency, no 2-click lag or cache bypass delay)
+- [x] `/book` route converted to auto-opening Booking Modal with backdrop blur and return routing
+- [x] Home page Hero section CTAs mapped to `/menu` ("View Our Menu") and `/visit` ("Find Us")
 - [x] `/menu` page items & categories 100% visible with espresso dark mode & live search
-- [x] Dual booking workflow live on `/book` & `BookingModal.tsx` ("Book a Table" vs "Host an Event")
+- [x] Dual booking workflow live in `BookingModal.tsx` ("Book a Table" vs "Host an Event")
 - [x] Clean attendee counts (`8 – 15 People`, `16 – 30 People`, `31 – 50 People`, `50+ People`)
 - [x] Corporate Event included in event types dropdown
 - [x] AV & Equipment removed; replaced with on-site vs outside event location selector + outside address field
@@ -112,4 +153,7 @@ This file documents key milestones, context, architecture choices, and the curre
 - [x] Booking management (List, Filter, Confirm, Cancel, Delete, Detail view) live
 - [x] Full CRUD API routes (`/api/reservations`, `/api/menu`) supporting `event_location`
 - [x] `Prd.md`, `Memory.md`, and `Agent.md` updated and in lockstep with codebase
+
+
+
 

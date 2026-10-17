@@ -71,6 +71,35 @@
       <div class="story-grid">
         <div class="story-image-wrapper reveal">
           <img src="images/latte-art.jpg" alt="Beautifully crafted latte art">
+          <div class="coffee-steam-container" aria-hidden="true">
+            <svg class="coffee-steam-svg" viewBox="0 0 400 600" fill="none" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="steamGrad1" x1="0%" y1="100%" x2="0%" y2="0%">
+                  <stop offset="0%" stop-color="#ffffff" stop-opacity="0" />
+                  <stop offset="25%" stop-color="#ffffff" stop-opacity="0.45" />
+                  <stop offset="65%" stop-color="#fff8f0" stop-opacity="0.3" />
+                  <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+                </linearGradient>
+                <linearGradient id="steamGrad2" x1="0%" y1="100%" x2="0%" y2="0%">
+                  <stop offset="0%" stop-color="#ffffff" stop-opacity="0" />
+                  <stop offset="30%" stop-color="#fff9f2" stop-opacity="0.4" />
+                  <stop offset="70%" stop-color="#ffffff" stop-opacity="0.22" />
+                  <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+                </linearGradient>
+                <filter id="steamBlur" x="-30%" y="-30%" width="160%" height="160%">
+                  <feGaussianBlur stdDeviation="5" />
+                </filter>
+                <filter id="steamBlurSoft" x="-30%" y="-30%" width="160%" height="160%">
+                  <feGaussianBlur stdDeviation="7" />
+                </filter>
+              </defs>
+              <path class="steam-wisp steam-wisp-1" d="M 185 340 Q 170 280 195 220 T 180 140 T 195 60" stroke="url(#steamGrad1)" stroke-width="14" stroke-linecap="round" filter="url(#steamBlur)" />
+              <path class="steam-wisp steam-wisp-2" d="M 200 350 Q 225 290 195 210 T 215 120 T 190 40" stroke="url(#steamGrad2)" stroke-width="18" stroke-linecap="round" filter="url(#steamBlurSoft)" />
+              <path class="steam-wisp steam-wisp-3" d="M 220 345 Q 240 270 215 190 T 235 110 T 210 30" stroke="url(#steamGrad1)" stroke-width="12" stroke-linecap="round" filter="url(#steamBlur)" />
+              <path class="steam-wisp steam-wisp-4" d="M 165 355 Q 140 295 170 230 T 150 150 T 175 70" stroke="url(#steamGrad2)" stroke-width="10" stroke-linecap="round" filter="url(#steamBlur)" />
+              <path class="steam-wisp steam-wisp-5" d="M 235 360 Q 260 300 230 235 T 250 145 T 225 65" stroke="url(#steamGrad1)" stroke-width="11" stroke-linecap="round" filter="url(#steamBlur)" />
+            </svg>
+          </div>
           <span class="story-image-label">Every cup, crafted.</span>
         </div>
         <div class="story-content">

@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import CoffeeSteam from './CoffeeSteam';
 
 export default function OurStory() {
   return (
@@ -13,6 +14,7 @@ export default function OurStory() {
               alt="Beautifully crafted latte art"
               loading="lazy"
             />
+            <CoffeeSteam />
             <span className="story-image-label">Every cup, crafted.</span>
           </div>
           <div className="story-content">

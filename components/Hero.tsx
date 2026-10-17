@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
+import Link from 'next/link';
 
 export default function Hero() {
   const bgImgRef = useRef<HTMLImageElement>(null);
@@ -16,16 +17,6 @@ export default function Hero() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  const scrollTo = (id: string) => {
-    const el = document.getElementById(id);
-    if (el) {
-      const offset = 80;
-      const targetPosition =
-        el.getBoundingClientRect().top + window.scrollY - offset;
-      window.scrollTo({ top: targetPosition, behavior: 'smooth' });
-    }
-  };
 
   return (
     <section className="hero" id="home">
@@ -51,20 +42,20 @@ export default function Hero() {
           tasty bites and something for every kind of coffee break.
         </p>
         <div className="hero-buttons">
-          <button
-            type="button"
+          <Link
+            href="/menu"
             className="btn-primary"
-            onClick={() => scrollTo('menu')}
+            id="heroMenuCta"
           >
             View Our Menu
-          </button>
-          <button
-            type="button"
+          </Link>
+          <Link
+            href="/visit"
             className="btn-secondary"
-            onClick={() => scrollTo('visit')}
+            id="heroFindUsCta"
           >
             Find Us
-          </button>
+          </Link>
         </div>
       </div>
       <div className="scroll-indicator">
