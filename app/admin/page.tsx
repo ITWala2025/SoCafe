@@ -243,80 +243,114 @@ export default function AdminDashboardPage() {
   const todayCount = reservations.filter((r) => r.reservation_date === todayStr).length;
 
   return (
-    <div className="admin-app">
-      {/* Top Admin Bar */}
-      <header className="admin-topbar">
-        <div className="admin-brand">
+    <div className="admin-app admin-layout-with-sidebar">
+      {/* LEFT SIDEBAR NAVIGATION */}
+      <aside className="admin-sidebar">
+        <div className="admin-sidebar-header">
           <Link href="/" className="admin-brand-link">
             <span className="brand-title">So Coffee</span>
-            <span className="brand-tag">ADMIN DASHBOARD</span>
+            <span className="brand-tag">MANAGER PORTAL</span>
           </Link>
         </div>
 
-        <div className="admin-topbar-actions">
-          <div className="admin-user-info">
-            <span className="user-icon">👤</span>
+        <nav className="admin-sidebar-nav">
+          <div className="sidebar-section-label">ADMIN NAVIGATION</div>
+
+          <button
+            type="button"
+            className={`sidebar-nav-item ${activeTab === 'overview' ? 'active' : ''}`}
+            onClick={() => setActiveTab('overview')}
+          >
+            <span className="sidebar-icon">📊</span>
+            <span className="sidebar-label">Overview</span>
+          </button>
+
+          <button
+            type="button"
+            className={`sidebar-nav-item ${activeTab === 'bookings' ? 'active' : ''}`}
+            onClick={() => setActiveTab('bookings')}
+          >
+            <span className="sidebar-icon">📅</span>
+            <span className="sidebar-label">Reservations & Bookings</span>
+            {pendingCount > 0 && <span className="sidebar-badge">{pendingCount}</span>}
+          </button>
+
+          <button
+            type="button"
+            className={`sidebar-nav-item ${activeTab === 'menu' ? 'active' : ''}`}
+            onClick={() => setActiveTab('menu')}
+          >
+            <span className="sidebar-icon">☕</span>
+            <span className="sidebar-label">Menu Management</span>
+            <span className="sidebar-count">{menuItems.length}</span>
+          </button>
+
+          <button
+            type="button"
+            className={`sidebar-nav-item ${activeTab === 'settings' ? 'active' : ''}`}
+            onClick={() => setActiveTab('settings')}
+          >
+            <span className="sidebar-icon">⚙️</span>
+            <span className="sidebar-label">Settings & Broadcast</span>
+          </button>
+        </nav>
+
+        {/* Sidebar Footer with Active Manager Info & Actions */}
+        <div className="admin-sidebar-footer">
+          <div className="admin-sidebar-user">
+            <div className="user-avatar">👤</div>
             <div>
               <p className="user-name">{user.name}</p>
               <p className="user-email">{user.email}</p>
             </div>
           </div>
 
-          <Link href="/" target="_blank" className="btn-view-site">
-            View Live Site ↗
-          </Link>
-
-          <button type="button" onClick={logout} className="btn-logout">
-            Sign Out
-          </button>
+          <div className="sidebar-footer-actions">
+            <Link href="/" target="_blank" className="btn-sidebar-link">
+              View Site ↗
+            </Link>
+            <button type="button" onClick={logout} className="btn-sidebar-logout">
+              Sign Out
+            </button>
+          </div>
         </div>
-      </header>
+      </aside>
 
-      {/* Global Admin Alert Notification */}
-      {adminNotice && (
-        <div className={`admin-notification-toast ${adminNotice.type}`}>
-          {adminNotice.text}
-        </div>
-      )}
+      {/* RIGHT MAIN WORKSPACE */}
+      <main className="admin-main-workspace">
+        {/* Workspace Top Header Bar */}
+        <header className="admin-workspace-header">
+          <div className="workspace-header-title">
+            <h1>
+              {activeTab === 'overview' && 'Executive Overview'}
+              {activeTab === 'bookings' && 'Reservations & Event Inquiries'}
+              {activeTab === 'menu' && 'Menu Catalog & Inventory'}
+              {activeTab === 'settings' && 'Announcements & System Settings'}
+            </h1>
+            <p className="workspace-header-subtitle">
+              {activeTab === 'overview' && 'Daily operations, performance metrics, and pending actions inside Lucan Community Centre.'}
+              {activeTab === 'bookings' && 'Review incoming table bookings and host event proposals.'}
+              {activeTab === 'menu' && 'Update pricing, edit descriptions, and toggle item stock availability in real time.'}
+              {activeTab === 'settings' && 'Broadcast daily counter specials and review database connectivity.'}
+            </p>
+          </div>
 
-      {/* Main Admin Content */}
-      <div className="admin-container">
-        {/* Navigation Tabs */}
-        <div className="admin-nav-tabs">
-          <button
-            type="button"
-            className={`admin-tab ${activeTab === 'overview' ? 'active' : ''}`}
-            onClick={() => setActiveTab('overview')}
-          >
-            📊 Overview
-          </button>
-          <button
-            type="button"
-            className={`admin-tab ${activeTab === 'bookings' ? 'active' : ''}`}
-            onClick={() => setActiveTab('bookings')}
-          >
-            📅 Reservations & Bookings
-            {pendingCount > 0 && <span className="tab-counter">{pendingCount}</span>}
-          </button>
-          <button
-            type="button"
-            className={`admin-tab ${activeTab === 'menu' ? 'active' : ''}`}
-            onClick={() => setActiveTab('menu')}
-          >
-            ☕ Menu Management ({menuItems.length})
-          </button>
-          <button
-            type="button"
-            className={`admin-tab ${activeTab === 'settings' ? 'active' : ''}`}
-            onClick={() => setActiveTab('settings')}
-          >
-            ⚙️ Settings & Announcements
-          </button>
-        </div>
+          <div className="workspace-header-status">
+            <span className="live-pill">● System Live</span>
+          </div>
+        </header>
 
-        {/* TAB 1: OVERVIEW */}
-        {activeTab === 'overview' && (
-          <div className="admin-tab-content">
+        {/* Global Admin Alert Notification */}
+        {adminNotice && (
+          <div className={`admin-notification-toast ${adminNotice.type}`}>
+            {adminNotice.text}
+          </div>
+        )}
+
+        <div className="admin-workspace-content">
+          {/* TAB 1: OVERVIEW */}
+          {activeTab === 'overview' && (
+            <div className="admin-tab-content">
             {/* Stat Cards */}
             <div className="stats-grid">
               <div className="stat-card">
@@ -406,6 +440,11 @@ export default function AdminDashboardPage() {
                           {r.event_type && (
                             <div style={{ fontSize: '0.8rem', color: '#8C6830', marginTop: '2px' }}>
                               {r.event_type}
+                            </div>
+                          )}
+                          {r.event_location && (
+                            <div style={{ fontSize: '0.75rem', color: '#6B6155', marginTop: '1px' }}>
+                              📍 {r.event_location}
                             </div>
                           )}
                         </td>
@@ -520,6 +559,11 @@ export default function AdminDashboardPage() {
                                 {r.event_type}
                               </div>
                             )}
+                            {r.event_location && (
+                              <div style={{ fontSize: '0.75rem', color: '#6B6155', marginTop: '2px' }}>
+                                📍 {r.event_location}
+                              </div>
+                            )}
                           </td>
                           <td>
                             <div>{r.email}</div>
@@ -614,6 +658,14 @@ export default function AdminDashboardPage() {
                       <div className="detail-row">
                         <span className="detail-label">Event Focus</span>
                         <strong>{selectedBooking.event_type}</strong>
+                      </div>
+                    )}
+                    {selectedBooking.event_location && (
+                      <div className="detail-row">
+                        <span className="detail-label">Location / Venue</span>
+                        <span style={{ fontWeight: 500, color: 'var(--color-dark-brown)' }}>
+                          📍 {selectedBooking.event_location}
+                        </span>
                       </div>
                     )}
                     {selectedBooking.catering_package && (
@@ -952,7 +1004,8 @@ export default function AdminDashboardPage() {
             </div>
           </div>
         )}
-      </div>
+        </div>
+      </main>
     </div>
   );
 }

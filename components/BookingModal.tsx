@@ -20,6 +20,8 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
     date: '',
     time: '10:30',
     eventType: 'Community Gathering / Meetup',
+    locationType: 'onsite',
+    outsideLocationAddress: '',
     cateringPackage: 'Barista Coffee & Fresh Morning Pastries (€6.50/person)',
     notes: '',
   });
@@ -69,6 +71,12 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
     e.preventDefault();
     setIsSubmitting(true);
 
+    const eventLoc = bookingMode === 'event'
+      ? (formData.locationType === 'outside'
+          ? (formData.outsideLocationAddress || 'Outside Location')
+          : 'So Coffee @ Lucan Community Centre (In-House)')
+      : null;
+
     try {
       const res = await fetch('/api/reservations', {
         method: 'POST',
@@ -79,6 +87,7 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
           phone: formData.phone,
           booking_type: bookingMode,
           event_type: bookingMode === 'event' ? formData.eventType : null,
+          event_location: eventLoc,
           catering_package: bookingMode === 'event' ? formData.cateringPackage : null,
           guests: formData.guests,
           reservation_date: formData.date,
@@ -93,7 +102,7 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
         showToast(
           bookingMode === 'table'
             ? `Thank you, ${formData.name}! Your table request for ${formData.guests} people on ${formData.date} has been received.`
-            : `Thank you, ${formData.name}! Your event hosting proposal for ${formData.guests} attendees has been received.`,
+            : `Thank you, ${formData.name}! Your event hosting proposal for ${formData.guests} has been received.`,
           '🌿'
         );
         onClose();
@@ -105,6 +114,8 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
           date: new Date().toISOString().split('T')[0],
           time: '10:30',
           eventType: 'Community Gathering / Meetup',
+          locationType: 'onsite',
+          outsideLocationAddress: '',
           cateringPackage: 'Barista Coffee & Fresh Morning Pastries (€6.50/person)',
           notes: '',
         });
@@ -217,9 +228,9 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
                   value={formData.guests}
                   onChange={handleChange}
                 >
-                  <option value="1-2">1 – 2 People (Cosy table)</option>
-                  <option value="3-4">3 – 4 People (Standard table)</option>
-                  <option value="5-8">5 – 8 People (Group table)</option>
+                  <option value="1-2">1 – 2 People </option>
+                  <option value="3-4">3 – 4 People </option>
+                  <option value="5-8">5 – 8 People </option>
                 </select>
               ) : (
                 <select
@@ -228,53 +239,84 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
                   value={formData.guests}
                   onChange={handleChange}
                 >
-                  <option value="8-15">8 – 15 People (Café Reserved Zone)</option>
-                  <option value="16-30">16 – 30 People (Multi-Purpose Suite)</option>
-                  <option value="31-50">31 – 50 People (Community Hall)</option>
-                  <option value="50+">50+ People (Full Centre Hall)</option>
+                  <option value="8-15">8 – 15 People </option>
+                  <option value="16-30">16 – 30 People </option>
+                  <option value="31-50">31 – 50 People </option>
+                  <option value="50+">50+ People </option>
                 </select>
               )}
             </div>
           </div>
 
           {bookingMode === 'event' && (
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="eventType">Event Type</label>
-                <select
-                  id="eventType"
-                  value={formData.eventType}
-                  onChange={handleChange}
-                >
-                  <option value="Community Gathering / Meetup">Community Group / Meetup</option>
-                  <option value="Book Club or Discussion Circle">Book Club / Discussion Circle</option>
-                  <option value="Workshop or Class">Workshop or Creative Class</option>
-                  <option value="Sports / Committee Debrief">Sports Club / Committee Meeting</option>
-                  <option value="Birthday or Family Celebration">Family Gathering or Birthday</option>
-                </select>
+            <>
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="eventType">Event Type</label>
+                  <select
+                    id="eventType"
+                    value={formData.eventType}
+                    onChange={handleChange}
+                  >
+                    <option value="Community Gathering / Meetup">Community Group / Meetup</option>
+                    <option value="Book Club or Discussion Circle">Book Club / Discussion Circle</option>
+                    <option value="Workshop or Class">Workshop or Creative Class</option>
+                    <option value="Sports / Committee Debrief">Sports Club / Committee Meeting</option>
+                    <option value="Birthday or Family Celebration">Family Gathering or Birthday</option>
+                    <option value="Corporate Event">Corporate Event</option>
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label htmlFor="cateringPackage">Catering Package</label>
+                  <select
+                    id="cateringPackage"
+                    value={formData.cateringPackage}
+                    onChange={handleChange}
+                  >
+                    <option value="Barista Coffee & Fresh Morning Pastries (€6.50/person)">
+                      Coffee & Pastries (€6.50/p)
+                    </option>
+                    <option value="Artisanal Lunch Sandwiches & Warm Bites (€12.50/person)">
+                      Lunch Sandwiches & Bites (€12.50/p)
+                    </option>
+                    <option value="Sweet Treats & Coffee Grazing Board (€9.00/person)">
+                      Sweet Treats Board (€9.00/p)
+                    </option>
+                    <option value="No Catering / Guests Order Individually">
+                      No Package (Individual Orders)
+                    </option>
+                  </select>
+                </div>
               </div>
-              <div className="form-group">
-                <label htmlFor="cateringPackage">Catering Package</label>
-                <select
-                  id="cateringPackage"
-                  value={formData.cateringPackage}
-                  onChange={handleChange}
-                >
-                  <option value="Barista Coffee & Fresh Morning Pastries (€6.50/person)">
-                    Coffee & Pastries (€6.50/p)
-                  </option>
-                  <option value="Artisanal Lunch Sandwiches & Warm Bites (€12.50/person)">
-                    Lunch Sandwiches & Bites (€12.50/p)
-                  </option>
-                  <option value="Sweet Treats & Coffee Grazing Board (€9.00/person)">
-                    Sweet Treats Board (€9.00/p)
-                  </option>
-                  <option value="No Catering / Guests Order Individually">
-                    No Package (Individual Orders)
-                  </option>
-                </select>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="locationType">Event Location *</label>
+                  <select
+                    id="locationType"
+                    required
+                    value={formData.locationType}
+                    onChange={handleChange}
+                  >
+                    <option value="onsite">So Coffee @ Lucan Community Centre (In-House)</option>
+                    <option value="outside">Outside Location / Off-Site Venue</option>
+                  </select>
+                </div>
+                {formData.locationType === 'outside' && (
+                  <div className="form-group">
+                    <label htmlFor="outsideLocationAddress">Outside Venue Address *</label>
+                    <input
+                      type="text"
+                      id="outsideLocationAddress"
+                      required
+                      value={formData.outsideLocationAddress}
+                      onChange={handleChange}
+                      placeholder="e.g. Venue name or delivery address..."
+                    />
+                  </div>
+                )}
               </div>
-            </div>
+            </>
           )}
 
           <div className="form-row">
@@ -343,8 +385,8 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
               {isSubmitting
                 ? 'Submitting...'
                 : bookingMode === 'table'
-                ? 'Confirm Table Reservation'
-                : 'Submit Event Proposal'}
+                  ? 'Confirm Table Reservation'
+                  : 'Submit Event Proposal'}
             </button>
           </div>
         </form>

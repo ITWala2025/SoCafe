@@ -111,14 +111,18 @@ The app is engineered with a **zero-downtime, graceful-fallback architecture**:
 
 ---
 
-## 5. Coding Standards for AI Agents
+## 5. Coding Standards & Mandatory Agent Rules
 
-1. **Preserve Visual Excellence**: Do not replace custom design system tokens in `app/globals.css` with generic styles. The site's warm palette and serif typography are central to the brand.
-2. **Client vs Server Components**:
+1. **MANDATORY: Always Review & Update `Memory.md` and `Prd.md`**:
+   - **Before Starting Work**: Always review `Memory.md` and `Prd.md` to understand existing context, architectural decisions, completed phases, and product requirements.
+   - **After Every Feature Implementation / Refinement**: AI agents MUST update both `Memory.md` and `Prd.md` to reflect new features, UI changes, database schema modifications, API endpoints, or workflows implemented. Never leave documentation out of sync with code.
+2. **Preserve Visual Excellence**: Do not replace custom design system tokens in `app/globals.css` with generic styles. The site's warm palette and serif typography are central to the brand.
+3. **Client vs Server Components**:
    - Keep page-level and static marketing sections server-friendly or lightweight.
    - Interactive components (`BookingModal`, `Navbar`, `MenuSection`, `Toast`) must have `'use client'`.
-3. **TypeScript Strictness**: Always import or declare types from `@/types/supabase` or `@/data/menu`. Never use `any` unless strictly unavoidable.
-4. **Git Discipline**:
+4. **TypeScript Strictness**: Always import or declare types from `@/types/supabase` or `@/data/menu`. Never use `any` unless strictly unavoidable.
+5. **Git Discipline**:
    - Remote repository: `https://github.com/ITWala2025/SoCafe.git`
    - Keep `.gitignore` updated (ignore `.next/`, `node_modules/`, `.env*.local`).
    - Use conventional commit messages (`feat:`, `fix:`, `docs:`, `style:`, `refactor:`).
+

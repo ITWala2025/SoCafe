@@ -19,6 +19,7 @@ export default function BookPage() {
     date: string;
     time: string;
     eventType?: string;
+    eventLocation?: string;
     cateringPackage?: string;
   } | null>(null);
 
@@ -30,8 +31,9 @@ export default function BookPage() {
     date: '',
     time: '10:30',
     eventType: 'Community Gathering / Meetup',
+    locationType: 'onsite',
+    outsideLocationAddress: '',
     cateringPackage: 'Barista Coffee & Fresh Morning Pastries (€6.50/person)',
-    avRequirements: 'None needed',
     notes: '',
   });
 
@@ -59,9 +61,11 @@ export default function BookPage() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    const fullNotes = bookingMode === 'event'
-      ? `[AV/Setup: ${formData.avRequirements}] ${formData.notes}`
-      : formData.notes;
+    const eventLoc = bookingMode === 'event'
+      ? (formData.locationType === 'outside'
+          ? (formData.outsideLocationAddress || 'Outside Location')
+          : 'So Coffee @ Lucan Community Centre (In-House)')
+      : null;
 
     try {
       const res = await fetch('/api/reservations', {
@@ -73,11 +77,12 @@ export default function BookPage() {
           phone: formData.phone,
           booking_type: bookingMode,
           event_type: bookingMode === 'event' ? formData.eventType : null,
+          event_location: eventLoc,
           catering_package: bookingMode === 'event' ? formData.cateringPackage : null,
           guests: formData.guests,
           reservation_date: formData.date,
           reservation_time: formData.time,
-          notes: fullNotes,
+          notes: formData.notes,
         }),
       });
 
@@ -91,6 +96,7 @@ export default function BookPage() {
           date: formData.date,
           time: formData.time,
           eventType: bookingMode === 'event' ? formData.eventType : undefined,
+          eventLocation: eventLoc || undefined,
           cateringPackage: bookingMode === 'event' ? formData.cateringPackage : undefined,
         });
         showToast(
@@ -121,7 +127,7 @@ export default function BookPage() {
             <h1 className="page-hero-title">Book a Space at So Coffee</h1>
             <p className="page-hero-desc">
               Whether you&apos;re catching up over morning flat whites, or hosting a community workshop,
-              club meetup, or private celebration inside Lucan Community Centre — we have the cosy tables
+              club meetup, corporate event, or private celebration — we have the cosy tables
               and versatile spaces to make it memorable.
             </p>
           </div>
@@ -150,7 +156,7 @@ export default function BookPage() {
                     className={`booking-mode-btn ${bookingMode === 'event' ? 'active' : ''}`}
                     onClick={() => handleModeSwitch('event')}
                   >
-                    <span>🎉</span> Host an Event / Gathering
+                    <span>🎉</span> Host an Event
                   </button>
                 </div>
 
@@ -165,7 +171,7 @@ export default function BookPage() {
                     <p className="success-lead">
                       Thank you, <strong>{submittedData.name}</strong>. We have logged your{' '}
                       {submittedData.bookingType === 'table' ? 'table booking' : 'event proposal'} for{' '}
-                      <strong>{submittedData.guests} attendees</strong> on{' '}
+                      <strong>{submittedData.guests}</strong> on{' '}
                       <strong>{submittedData.date}</strong> at <strong>{submittedData.time}</strong>.
                     </p>
                     {submittedData.bookingType === 'event' && (
@@ -173,6 +179,11 @@ export default function BookPage() {
                         <p style={{ margin: '4px 0', fontSize: '0.9rem' }}>
                           <strong>Event:</strong> {submittedData.eventType}
                         </p>
+                        {submittedData.eventLocation && (
+                          <p style={{ margin: '4px 0', fontSize: '0.9rem' }}>
+                            <strong>Location:</strong> {submittedData.eventLocation}
+                          </p>
+                        )}
                         <p style={{ margin: '4px 0', fontSize: '0.9rem' }}>
                           <strong>Catering:</strong> {submittedData.cateringPackage}
                         </p>
@@ -181,7 +192,7 @@ export default function BookPage() {
                     <p className="success-sub">
                       {submittedData.bookingType === 'table'
                         ? 'Our café team will review your booking and send a confirmation note to your email.'
-                        : 'Our café & Lucan Community Centre events manager will review room schedules and get back to you within 24 hours with room availability and bespoke catering details.'}
+                        : 'Our café & events manager will review your request and get back to you within 24 hours with availability and bespoke catering details.'}
                     </p>
                     <div className="success-actions">
                       <button
@@ -197,8 +208,9 @@ export default function BookPage() {
                             date: new Date().toISOString().split('T')[0],
                             time: '10:30',
                             eventType: 'Community Gathering / Meetup',
+                            locationType: 'onsite',
+                            outsideLocationAddress: '',
                             cateringPackage: 'Barista Coffee & Fresh Morning Pastries (€6.50/person)',
-                            avRequirements: 'None needed',
                             notes: '',
                           });
                         }}
@@ -216,12 +228,12 @@ export default function BookPage() {
                       <h3>
                         {bookingMode === 'table'
                           ? 'Reserve Your Table'
-                          : 'Host Your Community Event'}
+                          : 'Host Your Event'}
                       </h3>
                       <p>
                         {bookingMode === 'table'
                           ? 'Perfect for casual dining, catch-ups, and study sessions (1 to 8 guests).'
-                          : 'Host workshops, club meetings, committee debriefs, and private gatherings (8 to 50+ guests).'}
+                          : 'Host workshops, club meetings, committee debriefs, corporate events, and private gatherings (8 to 50+ guests).'}
                       </p>
                     </div>
 
@@ -229,7 +241,7 @@ export default function BookPage() {
                       <div className="booking-event-banner">
                         <span className="icon">🏛️</span>
                         <div>
-                          <strong>Community Spaces & Catering:</strong> We partner directly with Lucan Community Centre for flexible room configurations, audio/visual setups, and artisanal coffee and food catering.
+                          <strong>Community Spaces & Outside Catering:</strong> Host in-house inside Lucan Community Centre or hire us to provide artisanal coffee & food catering to your outside venue.
                         </div>
                       </div>
                     )}
@@ -282,9 +294,9 @@ export default function BookPage() {
                               value={formData.guests}
                               onChange={handleChange}
                             >
-                              <option value="1-2">1 – 2 People (Cosy table)</option>
-                              <option value="3-4">3 – 4 People (Standard table)</option>
-                              <option value="5-8">5 – 8 People (Large communal table)</option>
+                              <option value="1-2">1 – 2 People</option>
+                              <option value="3-4">3 – 4 People</option>
+                              <option value="5-8">5 – 8 People</option>
                             </select>
                           </div>
                         ) : (
@@ -296,10 +308,10 @@ export default function BookPage() {
                               value={formData.guests}
                               onChange={handleChange}
                             >
-                              <option value="8-15">8 – 15 People (Café Reserved Zone)</option>
-                              <option value="16-30">16 – 30 People (Multi-Purpose Suite)</option>
-                              <option value="31-50">31 – 50 People (Community Hall)</option>
-                              <option value="50+">50+ People (Large Event / Full Centre Hall)</option>
+                              <option value="8-15">8 – 15 People</option>
+                              <option value="16-30">16 – 30 People</option>
+                              <option value="31-50">31 – 50 People</option>
+                              <option value="50+">50+ People</option>
                             </select>
                           </div>
                         )}
@@ -322,7 +334,7 @@ export default function BookPage() {
                                 <option value="Workshop or Class">Workshop or Creative Class</option>
                                 <option value="Sports / Committee Debrief">Sports Club / Committee Meeting</option>
                                 <option value="Birthday or Family Celebration">Family Gathering or Birthday</option>
-                                <option value="Corporate or Remote Team Sync">Remote Work Team Sync</option>
+                                <option value="Corporate Event">Corporate Event</option>
                               </select>
                             </div>
 
@@ -350,19 +362,33 @@ export default function BookPage() {
                             </div>
                           </div>
 
-                          <div className="form-group">
-                            <label htmlFor="avRequirements">AV & Equipment Setup</label>
-                            <select
-                              id="avRequirements"
-                              value={formData.avRequirements}
-                              onChange={handleChange}
-                            >
-                              <option value="None needed">No AV needed (Casual seating)</option>
-                              <option value="Projector & Display Screen">Projector & Display Screen</option>
-                              <option value="Microphone & Sound System">Microphone & PA Sound System</option>
-                              <option value="Flipchart & Whiteboard">Flipchart & Whiteboard</option>
-                              <option value="Full Setup (Projector + PA + Whiteboard)">Full AV Suite (Projector + PA + Whiteboard)</option>
-                            </select>
+                          <div className="form-row">
+                            <div className="form-group">
+                              <label htmlFor="locationType">Event Location *</label>
+                              <select
+                                id="locationType"
+                                required
+                                value={formData.locationType}
+                                onChange={handleChange}
+                              >
+                                <option value="onsite">So Coffee @ Lucan Community Centre (In-House)</option>
+                                <option value="outside">Outside Location / Off-Site Venue</option>
+                              </select>
+                            </div>
+
+                            {formData.locationType === 'outside' && (
+                              <div className="form-group">
+                                <label htmlFor="outsideLocationAddress">Outside Venue Address / Location *</label>
+                                <input
+                                  type="text"
+                                  id="outsideLocationAddress"
+                                  required
+                                  value={formData.outsideLocationAddress}
+                                  onChange={handleChange}
+                                  placeholder="e.g. St. Mary's Hall, office boardroom, venue address..."
+                                />
+                              </div>
+                            )}
                           </div>
                         </>
                       )}

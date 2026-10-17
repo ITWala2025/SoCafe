@@ -103,37 +103,34 @@ The booking interface features a dual-mode segmented workflow allowing customers
   4. *Confirmation / Decline*: Manager confirms request; guest receives confirmation email.
   5. *Walk-in Buffer*: A minimum of 3 walk-in counter and bar tables are always held unreserved.
 
-##### Workflow B: Host an Event / Community Gathering (Groups 8 to 50+)
-- **Target Audience**: Local community clubs, book clubs, charities, sports teams, workshop instructors, private family functions.
-- **Primary Use Cases**: Weekly club meetups, creative workshops, sports committee debriefs, anniversary / birthday morning teas, remote team syncs.
+##### Workflow B: Host an Event (Groups 8 to 50+)
+- **Target Audience**: Local community clubs, book clubs, charities, sports teams, workshop instructors, corporate team gatherings, private celebrations.
+- **Primary Use Cases**: Weekly club meetups, creative workshops, corporate offsites & team syncs, sports committee debriefs, anniversary / birthday morning teas.
 - **Data Capture**:
   - Primary Organizer: Full Name, Email, Phone Number.
-  - Expected Attendees: `8-15 People (Café Reserved Zone)`, `16-30 People (Multi-Purpose Suite)`, `31-50 People (Community Hall)`, `50+ People (Full Centre Hall)`.
+  - Expected Attendees: `8 – 15 People`, `16 – 30 People`, `31 – 50 People`, `50+ People`.
   - Event / Gathering Type:
     - *Community Gathering / Meetup*
     - *Book Club or Discussion Circle*
     - *Workshop or Creative Class*
     - *Sports / Committee Debrief*
     - *Birthday or Family Celebration*
-    - *Corporate or Remote Team Sync*
+    - *Corporate Event*
+  - Event Location:
+    - *So Coffee @ Lucan Community Centre (In-House)*
+    - *Outside Location / Off-Site Venue* (captures outside venue name & street address)
   - Catering Packages:
     - **Package 1**: *Barista Coffee & Fresh Morning Pastries* (€6.50 / person) — Specialty batch brew or barista espresso with warm croissants, pain au chocolat, and scones with Irish butter & jam.
     - **Package 2**: *Artisanal Lunch Sandwiches & Warm Bites* (€12.50 / person) — Sourdough toasties, artisan chicken & pesto wraps, goat cheese tartlets, and fresh salads.
     - **Package 3**: *Sweet Treats & Coffee Grazing Board* (€9.00 / person) — Artisan brownie bites, lemon drizzle loaf, raspberry almond frangipanes, and unlimited filter coffee / Barry's tea.
     - **Package 4**: *No Set Package* — Individual pay-as-you-go counter ordering.
-  - Audio/Visual & Room Requirements:
-    - *No AV needed (Casual seating)*
-    - *Projector & Display Screen*
-    - *Microphone & PA Sound System*
-    - *Flipchart & Whiteboard*
-    - *Full AV Suite (Projector + PA + Whiteboard)*
   - Schedule & Timeslot: Supports daytime and evening slots (`08:30` to `18:00`).
   - Layout & Setup Notes: Theatre style vs boardroom table layout, dietary allergens, custom timeline.
 - **Workflow & Lifecycle**:
   1. *Submission*: Proposal submitted with `booking_type = 'event'`.
   2. *SLA Protocol*: Acknowledged instantly on screen; flagged with priority badge in Admin Dashboard.
-  3. *Centre Coordination*: Café manager checks Lucan Community Centre room availability and verifies audio/visual equipment.
-  4. *Custom Quote & Proposal*: Within 24 hours, manager contacts the organizer via email/phone with room confirmation, bespoke catering schedule, and deposit terms (if applicable).
+  3. *Location & Resource Coordination*: For on-site events, café manager checks Lucan Community Centre room availability. For outside events, manager evaluates catering logistics and delivery schedule.
+  4. *Custom Quote & Proposal*: Within 24 hours, manager contacts the organizer via email/phone with booking confirmation, bespoke catering schedule, and deposit terms (if applicable).
   5. *Admin State Transition*: Manager updates booking state to `confirmed` in Admin Dashboard.
 
 ---
@@ -148,28 +145,35 @@ The booking interface features a dual-mode segmented workflow allowing customers
 - **Supabase Auth Migration Ready**: Structured with `useAdminAuth` hook ready for `supabase.auth.signInWithPassword`.
 - Automatic redirect to `/admin` upon successful sign in, and redirect to `/admin/login` if unauthenticated.
 
-#### 2. Dashboard Shell & Top Bar
-- Brand badge: *"So Coffee ADMIN DASHBOARD"*.
-- Active manager identity display (Name, Email).
-- "View Live Site" quick link and "Sign Out" button.
-- Global toast notification banner for actions.
+#### 2. Dashboard Shell & Left Sidebar Navigation
+- **Left Sidebar Menu**:
+  - Brand header: *"So Coffee — MANAGER PORTAL"*.
+  - Vertical menu items:
+    - 📊 **Overview**
+    - 📅 **Reservations & Bookings** (with live pending count badge)
+    - ☕ **Menu Management** (with live active item counter)
+    - ⚙️ **Settings & Broadcast**
+  - Persistent bottom user card with manager avatar, name, email, quick link to "View Site ↗", and "Sign Out" button.
+- **Right Main Workspace**:
+  - Workspace header displaying active view title, operational sub-text, and system live status indicator.
+  - Global toast notification banner for actions.
 
-#### 3. Dashboard Tabs:
+#### 3. Dashboard Views:
 - **📊 Overview**:
   - Live metric stat cards: *Pending Bookings*, *Confirmed Bookings*, *Today's Reservations*, *Active Menu Items*.
   - Management shortcuts (+ Add Menu Item, Review Bookings).
-  - Recent reservation requests table with dual badges (`☕ Table` vs `🎉 Event`), party size, date/time, and quick Confirm and Details actions.
+  - Recent reservation requests table with dual badges (`☕ Table` vs `🎉 Event`), event location, party size, date/time, and quick Confirm and Details actions.
 - **📅 Reservations & Bookings Management**:
   - Status filter pills: *All*, *Pending*, *Confirmed*, *Cancelled* with live count counters.
   - Search box filtering bookings by guest name, email, or event title.
-  - Table columns: **Type & Guest** (with badge and event title), **Contact** (email + phone), **Date & Time**, **Party Size / Attendees**, **Status Badge**, **Actions**.
+  - Table columns: **Type & Guest** (with badge, event title, and location), **Contact** (email + phone), **Date & Time**, **Party Size / Attendees**, **Status Badge**, **Actions**.
   - Quick actions: **Confirm** (one-click state update), **Cancel**, **Delete** (with confirmation safeguard).
   - **Slide-out Detail Drawer**:
     - Displays booking type badge (`☕ Table Reservation` or `🎉 Community Event`).
-    - Event focus / title and selected catering package (for events).
+    - Event focus / title, venue location (In-House vs Outside address), and selected catering package.
     - Full contact info with direct `mailto:` and `tel:` links.
     - Formatted reservation date and time.
-    - Special notes and AV equipment requirements.
+    - Special notes and dietary requirements.
     - Contextual action buttons (Confirm Booking / Mark as Cancelled).
 - **☕ Menu Management**:
   - Category filter pills: *All Items*, *Hot Drinks*, *Cold Drinks*, *Food*, *Sweet Treats*.
@@ -187,7 +191,7 @@ The booking interface features a dual-mode segmented workflow allowing customers
 
 ### 5.1 `/api/reservations`
 - **GET**: Returns all reservations ordered by `created_at DESC` (Admin view).
-- **POST**: Creates a new reservation (Guest submission). Accepts `name`, `email`, `phone`, `booking_type` (`'table' | 'event'`), `event_type`, `catering_package`, `guests`, `reservation_date`, `reservation_time`, and `notes`. Sets `status = 'pending'`.
+- **POST**: Creates a new reservation (Guest submission). Accepts `name`, `email`, `phone`, `booking_type` (`'table' | 'event'`), `event_type`, `event_location`, `catering_package`, `guests`, `reservation_date`, `reservation_time`, and `notes`. Sets `status = 'pending'`.
 - **PATCH**: Updates reservation status (`status: 'confirmed' | 'cancelled'`) by `id`.
 - **DELETE**: Deletes a reservation by `id`.
 - *Supports Supabase `reservations` table with in-memory fallback for local dev.*
@@ -224,7 +228,7 @@ CREATE TABLE menu_items (
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
--- 3. Reservations (Supports Tables & Events)
+-- 3. Reservations (Supports Tables & Events, On-Site & Outside Venues)
 CREATE TABLE reservations (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name TEXT NOT NULL,
@@ -232,6 +236,7 @@ CREATE TABLE reservations (
   phone TEXT,
   booking_type TEXT NOT NULL DEFAULT 'table' CHECK (booking_type IN ('table', 'event')),
   event_type TEXT,
+  event_location TEXT,
   catering_package TEXT,
   guests TEXT NOT NULL,
   reservation_date DATE NOT NULL,
