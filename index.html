@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>So Coffee — Coffee, Comfort & Good Food | Lucan Community Centre</title>
+  <meta name="description" content="A cosy little café inside Lucan Community Centre — serving great coffee, tasty bites and something for every kind of coffee break.">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☕</text></svg>">
+</head>
+<body>
+
+  <!-- ===== NAVIGATION ===== -->
+  <nav class="navbar" id="navbar">
+    <a href="#home" class="nav-logo">So Coffee</a>
+    <div class="nav-links" id="navLinks">
+      <a href="#home">Home</a>
+      <a href="#menu">Menu</a>
+      <a href="#about">About</a>
+      <a href="#visit">Visit Us</a>
+      <a href="#book" class="nav-book-link" id="navBookBtn">Book</a>
+      <a href="#menu" class="nav-cta">View Menu</a>
+    </div>
+    <div class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </nav>
+
+  <!-- ===== HERO SECTION ===== -->
+  <section class="hero" id="home">
+    <div class="hero-bg">
+      <img src="images/hero-bg.jpg" alt="So Coffee café interior" loading="eager">
+    </div>
+    <div class="hero-content">
+      <p class="hero-label">
+        <span class="pin">📍</span> LUCAN COMMUNITY CENTRE, IRELAND
+      </p>
+      <h1 class="hero-title">
+        Coffee,<br>
+        <em>comfort</em><br>
+        <span class="ampersand">&</span> good food.
+      </h1>
+      <p class="hero-description">
+        A cosy little café inside Lucan Community Centre — serving great coffee, tasty bites and something for every kind of coffee break.
+      </p>
+      <div class="hero-buttons">
+        <a href="#menu" class="btn-primary">View Our Menu</a>
+        <a href="#visit" class="btn-secondary">Find Us</a>
+      </div>
+    </div>
+    <div class="scroll-indicator">
+      <span class="line"></span>
+      <span class="text">SCROLL</span>
+    </div>
+  </section>
+
+  <!-- ===== OUR STORY SECTION ===== -->
+  <section class="story-section" id="about">
+    <div class="container">
+      <div class="story-grid">
+        <div class="story-image-wrapper reveal">
+          <img src="images/latte-art.jpg" alt="Beautifully crafted latte art">
+          <span class="story-image-label">Every cup, crafted.</span>
+        </div>
+        <div class="story-content">
+          <p class="section-label reveal">OUR STORY</p>
+          <h2 class="section-title reveal reveal-delay-1">A little break goes a long way.</h2>
+          <p class="story-text reveal reveal-delay-2">
+            Whether you're grabbing your morning coffee, meeting someone for a chat, or treating yourself to something tasty — So Coffee is here for the little moments that make the day better.
+          </p>
+          <p class="story-text reveal reveal-delay-3">
+            We keep it simple: great drinks, honest food, and a genuinely warm welcome. No fuss. Just good coffee and good company.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== MENU SECTION ===== -->
+  <section class="menu-section" id="menu">
+    <div class="container">
+      <div class="menu-header">
+        <p class="section-label reveal">WHAT WE SERVE</p>
+        <h2 class="section-title reveal reveal-delay-1">Find your favourite.</h2>
+        <p class="menu-subtitle reveal reveal-delay-2">Prices will be listed at the counter. Items may vary — ask our team for today's selection.</p>
+      </div>
+
+      <div class="menu-tabs reveal reveal-delay-2">
+        <button class="menu-tab active" data-tab="hot">Hot Drinks</button>
+        <button class="menu-tab" data-tab="cold">Cold Drinks</button>
+        <button class="menu-tab" data-tab="food">Food</button>
+        <button class="menu-tab" data-tab="treats">Sweet Treats</button>
+      </div>
+
+      <div class="menu-grid" id="menuGrid">
+        <!-- Menu cards populated by JS -->
+      </div>
+
+      <p class="menu-note reveal">Menu is subject to availability. Please ask our friendly team about allergens.</p>
+    </div>
+  </section>
+
+  <!-- ===== FOOD & DRINK SECTION ===== -->
+  <section class="food-section" id="food">
+    <div class="container">
+      <div class="food-header">
+        <p class="section-label reveal">FOOD & DRINK</p>
+        <h2 class="section-title reveal reveal-delay-1">Something tasty, whenever you need it.</h2>
+      </div>
+      <div class="food-grid">
+        <div class="food-card reveal">
+          <div class="food-card-image">
+            <img src="images/coffee-pastries.jpg" alt="Coffee & Pastries">
+          </div>
+          <h3 class="food-card-title">Coffee & Pastries</h3>
+          <p class="food-card-subtitle">Start the day right.</p>
+        </div>
+        <div class="food-card reveal reveal-delay-1">
+          <div class="food-card-image">
+            <img src="images/sweet-treats.jpg" alt="Sweet Treats">
+          </div>
+          <h3 class="food-card-title">Sweet Treats</h3>
+          <p class="food-card-subtitle">Because you deserve it.</p>
+        </div>
+        <div class="food-card reveal reveal-delay-2">
+          <div class="food-card-image">
+            <img src="images/light-bites.jpg" alt="Light Bites">
+          </div>
+          <h3 class="food-card-title">Light Bites</h3>
+          <p class="food-card-subtitle">Fresh, simple, satisfying.</p>
+        </div>
+        <div class="food-card reveal reveal-delay-3">
+          <div class="food-card-image">
+            <img src="images/cold-drinks.jpg" alt="Cold Drinks">
+          </div>
+          <h3 class="food-card-title">Cold Drinks</h3>
+          <p class="food-card-subtitle">Refresh & recharge.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== EVERY CUP SECTION ===== -->
+  <section class="every-cup-section">
+    <div class="every-cup-bg">
+      <img src="images/slow-moments.jpg" alt="Cosy café atmosphere">
+    </div>
+    <div class="every-cup-content">
+      <p class="every-cup-label reveal">EVERY CUP</p>
+      <h2 class="every-cup-title reveal reveal-delay-1">
+        Made for<br><em>slow moments</em>
+      </h2>
+      <p class="every-cup-text reveal reveal-delay-2">
+        From your first coffee of the morning to an afternoon pick-me-up — find your favourite drink and make yourself comfortable.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===== COMMUNITY SECTION ===== -->
+  <section class="community-section" id="community">
+    <div class="container">
+      <div class="community-grid">
+        <div class="community-content">
+          <p class="section-label reveal">COMMUNITY</p>
+          <h2 class="section-title reveal reveal-delay-1">More than just a coffee stop.</h2>
+          <p class="community-text reveal reveal-delay-2">
+            Located inside Lucan Community Centre, So Coffee is part of the everyday rhythm of the local community — a welcoming place to pause, catch up and enjoy something good.
+          </p>
+          <p class="community-text reveal reveal-delay-3">
+            Whether you're here for a class, a meeting, or just passing through — there's always a warm cup and a friendly face waiting for you.
+          </p>
+          <div class="community-quote reveal reveal-delay-4">
+            <div class="community-quote-icon">🌿</div>
+            <p class="community-quote-text">"Your little coffee stop in Lucan."</p>
+          </div>
+        </div>
+        <div class="community-image-wrapper reveal">
+          <img src="images/community.jpg" alt="Community enjoying coffee together">
+          <div class="community-location-tag">
+            <span class="pin">📍</span> Lucan Community Centre
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== VISIT US SECTION ===== -->
+  <section class="visit-section" id="visit">
+    <div class="container">
+      <div class="visit-grid">
+        <div class="visit-content">
+          <p class="section-label reveal">FIND US</p>
+          <h2 class="section-title reveal reveal-delay-1">Come say hello.</h2>
+          <div class="visit-info-grid reveal reveal-delay-2">
+            <div class="visit-info-item">
+              <h4>📍 Location</h4>
+              <p>Lucan Community Centre<br>Esker Lane, Lucan<br>Co. Dublin, Ireland</p>
+            </div>
+            <div class="visit-info-item">
+              <h4>🕐 Opening Hours</h4>
+              <p>Monday – Friday<br>8:00 AM – 4:00 PM<br><br>Saturday – Sunday<br>9:00 AM – 3:00 PM</p>
+            </div>
+            <div class="visit-info-item">
+              <h4>📞 Contact</h4>
+              <p><a href="mailto:hello@socoffee.ie" class="contact-link">hello@socoffee.ie</a></p>
+            </div>
+            <div class="visit-info-item">
+              <h4>🌐 Follow Us</h4>
+              <p><a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="contact-link">@socoffee.lucan</a></p>
+            </div>
+          </div>
+        </div>
+        <div class="visit-map reveal reveal-delay-1">
+          <iframe
+            src="https://maps.google.com/maps?q=Lucan+Community+Centre,+Esker+Lane,+Lucan,+Dublin,+Ireland&t=&z=15&ie=UTF8&iwloc=&output=embed"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="So Coffee Location Map">
+          </iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <h3 class="footer-logo">So Coffee</h3>
+          <p>A cosy little café inside Lucan Community Centre, serving great coffee and warm welcomes.</p>
+        </div>
+        <div class="footer-nav">
+          <div class="footer-nav-col">
+            <h4>Menu</h4>
+            <a href="#menu">Hot Drinks</a>
+            <a href="#menu">Cold Drinks</a>
+            <a href="#food">Food</a>
+            <a href="#food">Sweet Treats</a>
+          </div>
+          <div class="footer-nav-col">
+            <h4>Visit</h4>
+            <a href="#about">Our Story</a>
+            <a href="#visit">Location</a>
+            <a href="#visit">Opening Hours</a>
+            <a href="#community">Community</a>
+            <a href="#book" class="footer-book-link">Book a Space</a>
+          </div>
+          <div class="footer-nav-col">
+            <h4>Connect</h4>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">Facebook</a>
+            <a href="mailto:hello@socoffee.ie">Email Us</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 So Coffee. All rights reserved.</p>
+        <div class="footer-social">
+          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+            </svg>
+          </a>
+          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+            </svg>
+          </a>
+          <a href="mailto:hello@socoffee.ie" aria-label="Email">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+              <polyline points="22,6 12,13 2,6"></polyline>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== BOOKING MODAL ===== -->
+  <div class="modal-backdrop" id="bookingModal" aria-hidden="true" role="dialog" aria-labelledby="modalTitle">
+    <div class="modal-dialog">
+      <button class="modal-close" id="modalCloseBtn" aria-label="Close dialog">&times;</button>
+      <div class="modal-header">
+        <p class="modal-label">TABLE & COMMUNITY BOOKINGS</p>
+        <h3 class="modal-title" id="modalTitle">Book a Space at So Coffee</h3>
+        <p class="modal-subtitle">Reserve a spot for a community meetup, study session, or group catch-up inside Lucan Community Centre.</p>
+      </div>
+      <form class="modal-form" id="bookingForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="bookName">Your Name *</label>
+            <input type="text" id="bookName" required placeholder="e.g. Siobhan Murphy">
+          </div>
+          <div class="form-group">
+            <label for="bookEmail">Email Address *</label>
+            <input type="email" id="bookEmail" required placeholder="siobhan@example.ie">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="bookPhone">Phone Number</label>
+            <input type="tel" id="bookPhone" placeholder="+353 87 123 4567">
+          </div>
+          <div class="form-group">
+            <label for="bookGuests">Number of People *</label>
+            <select id="bookGuests" required>
+              <option value="1-2">1 – 2 People (Cosy table)</option>
+              <option value="3-4" selected>3 – 4 People (Standard table)</option>
+              <option value="5-8">5 – 8 People (Group table)</option>
+              <option value="9+">9+ People (Community room inquiry)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="bookDate">Date *</label>
+            <input type="date" id="bookDate" required>
+          </div>
+          <div class="form-group">
+            <label for="bookTime">Preferred Time *</label>
+            <select id="bookTime" required>
+              <option value="08:30">08:30 AM</option>
+              <option value="09:30">09:30 AM</option>
+              <option value="10:30" selected>10:30 AM</option>
+              <option value="11:30">11:30 AM</option>
+              <option value="12:30">12:30 PM</option>
+              <option value="13:30">01:30 PM</option>
+              <option value="14:30">02:30 PM</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="bookNotes">Special Notes or Requirements</label>
+          <textarea id="bookNotes" rows="3" placeholder="Tell us about your visit (high chair needed, quiet corner, meetup topic, etc.)..."></textarea>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" id="modalCancelBtn">Cancel</button>
+          <button type="submit" class="btn-submit">Confirm Reservation</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== TOAST NOTIFICATION ===== -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <!-- ===== BACK TO TOP BUTTON ===== -->
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="18 15 12 9 6 15"></polyline>
+    </svg>
+  </button>
+
+  <script src="script.js"></script>
+</body>
+</html>
