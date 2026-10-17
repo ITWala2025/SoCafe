@@ -85,13 +85,56 @@ In addition, it provides a protected **Admin Dashboard** (`/admin`) for café ma
 - Embedded interactive Google Map.
 - **Visitor FAQ**: Answers regarding complimentary Wi-Fi, milk alternatives, stroller access, and group seating.
 
-#### 5. Dedicated Reservation Page (`/book`)
-- Dedicated full-width booking card with complete reservation form:
-  - Full Name, Email, Phone Number, Party Size (1-2, 3-4, 5-8, 9+ community room inquiry).
-  - Date Picker with minimum date validation, Time Slot selector.
-  - Special requests & notes (high chairs, quiet table, pre-ordered food).
-- **Instant Confirmation Banner**: Replaces form with booking summary upon submission.
-- **Sidebar Guide**: Helpful walk-in tips, recurring club info, and Lucan Community Centre catering details.
+#### 5. Dedicated Reservation & Event Hosting Page (`/book`)
+The booking interface features a dual-mode segmented workflow allowing customers and community groups to effortlessly choose between table reservations and full event hosting proposals.
+
+##### Workflow A: Book a Table (Casual Dining & Catch-Ups)
+- **Target Audience**: Individuals, couples, families, remote workers, and small casual groups (1 to 8 guests).
+- **Primary Use Cases**: Morning coffee dates, leisurely brunch, remote laptop sessions, informal one-on-ones.
+- **Data Capture**:
+  - Primary Contact: Full Name, Email Address, Contact Phone Number.
+  - Party Size: `1-2 People (Cosy table)`, `3-4 People (Standard table)`, `5-8 People (Large communal table)`.
+  - Date & Time Slot: Date picker (minimum date = today), Time selector (08:30 to 14:30 in 1-hour increments).
+  - Seating Preferences & Notes: High chair requirements, stroller space, quiet corner, wheelchair accessibility.
+- **Workflow & Lifecycle**:
+  1. *Submission*: Guest submits request via `/book` or global `BookingModal`. Payload is posted to `/api/reservations` with `booking_type = 'table'` and initial `status = 'pending'`.
+  2. *Automated Acknowledgment*: Real-time toast confirmation and success screen rendered displaying summary.
+  3. *Café Review & Triage*: Manager reviews table allocation in `/admin` dashboard.
+  4. *Confirmation / Decline*: Manager confirms request; guest receives confirmation email.
+  5. *Walk-in Buffer*: A minimum of 3 walk-in counter and bar tables are always held unreserved.
+
+##### Workflow B: Host an Event / Community Gathering (Groups 8 to 50+)
+- **Target Audience**: Local community clubs, book clubs, charities, sports teams, workshop instructors, private family functions.
+- **Primary Use Cases**: Weekly club meetups, creative workshops, sports committee debriefs, anniversary / birthday morning teas, remote team syncs.
+- **Data Capture**:
+  - Primary Organizer: Full Name, Email, Phone Number.
+  - Expected Attendees: `8-15 People (Café Reserved Zone)`, `16-30 People (Multi-Purpose Suite)`, `31-50 People (Community Hall)`, `50+ People (Full Centre Hall)`.
+  - Event / Gathering Type:
+    - *Community Gathering / Meetup*
+    - *Book Club or Discussion Circle*
+    - *Workshop or Creative Class*
+    - *Sports / Committee Debrief*
+    - *Birthday or Family Celebration*
+    - *Corporate or Remote Team Sync*
+  - Catering Packages:
+    - **Package 1**: *Barista Coffee & Fresh Morning Pastries* (€6.50 / person) — Specialty batch brew or barista espresso with warm croissants, pain au chocolat, and scones with Irish butter & jam.
+    - **Package 2**: *Artisanal Lunch Sandwiches & Warm Bites* (€12.50 / person) — Sourdough toasties, artisan chicken & pesto wraps, goat cheese tartlets, and fresh salads.
+    - **Package 3**: *Sweet Treats & Coffee Grazing Board* (€9.00 / person) — Artisan brownie bites, lemon drizzle loaf, raspberry almond frangipanes, and unlimited filter coffee / Barry's tea.
+    - **Package 4**: *No Set Package* — Individual pay-as-you-go counter ordering.
+  - Audio/Visual & Room Requirements:
+    - *No AV needed (Casual seating)*
+    - *Projector & Display Screen*
+    - *Microphone & PA Sound System*
+    - *Flipchart & Whiteboard*
+    - *Full AV Suite (Projector + PA + Whiteboard)*
+  - Schedule & Timeslot: Supports daytime and evening slots (`08:30` to `18:00`).
+  - Layout & Setup Notes: Theatre style vs boardroom table layout, dietary allergens, custom timeline.
+- **Workflow & Lifecycle**:
+  1. *Submission*: Proposal submitted with `booking_type = 'event'`.
+  2. *SLA Protocol*: Acknowledged instantly on screen; flagged with priority badge in Admin Dashboard.
+  3. *Centre Coordination*: Café manager checks Lucan Community Centre room availability and verifies audio/visual equipment.
+  4. *Custom Quote & Proposal*: Within 24 hours, manager contacts the organizer via email/phone with room confirmation, bespoke catering schedule, and deposit terms (if applicable).
+  5. *Admin State Transition*: Manager updates booking state to `confirmed` in Admin Dashboard.
 
 ---
 
@@ -115,13 +158,19 @@ In addition, it provides a protected **Admin Dashboard** (`/admin`) for café ma
 - **📊 Overview**:
   - Live metric stat cards: *Pending Bookings*, *Confirmed Bookings*, *Today's Reservations*, *Active Menu Items*.
   - Management shortcuts (+ Add Menu Item, Review Bookings).
-  - Recent reservation requests table with quick Confirm and View buttons.
-- **📅 Reservations & Bookings**:
+  - Recent reservation requests table with dual badges (`☕ Table` vs `🎉 Event`), party size, date/time, and quick Confirm and Details actions.
+- **📅 Reservations & Bookings Management**:
   - Status filter pills: *All*, *Pending*, *Confirmed*, *Cancelled* with live count counters.
-  - Search box filtering bookings by guest name or email.
-  - Comprehensive data table displaying guest name, contact, date, time, party size, and status badge.
-  - Quick actions: **Confirm**, **Cancel**, **Delete**.
-  - **Slide-out Detail Drawer**: Displays full booking details, notes, phone, and direct email link.
+  - Search box filtering bookings by guest name, email, or event title.
+  - Table columns: **Type & Guest** (with badge and event title), **Contact** (email + phone), **Date & Time**, **Party Size / Attendees**, **Status Badge**, **Actions**.
+  - Quick actions: **Confirm** (one-click state update), **Cancel**, **Delete** (with confirmation safeguard).
+  - **Slide-out Detail Drawer**:
+    - Displays booking type badge (`☕ Table Reservation` or `🎉 Community Event`).
+    - Event focus / title and selected catering package (for events).
+    - Full contact info with direct `mailto:` and `tel:` links.
+    - Formatted reservation date and time.
+    - Special notes and AV equipment requirements.
+    - Contextual action buttons (Confirm Booking / Mark as Cancelled).
 - **☕ Menu Management**:
   - Category filter pills: *All Items*, *Hot Drinks*, *Cold Drinks*, *Food*, *Sweet Treats*.
   - **Add Menu Item Modal**: Name, Category, Description, and Display Price.
@@ -137,8 +186,8 @@ In addition, it provides a protected **Admin Dashboard** (`/admin`) for café ma
 ## 5. API Route Specifications
 
 ### 5.1 `/api/reservations`
-- **GET**: Returns all reservations (Admin view).
-- **POST**: Creates a new reservation (Guest submission).
+- **GET**: Returns all reservations ordered by `created_at DESC` (Admin view).
+- **POST**: Creates a new reservation (Guest submission). Accepts `name`, `email`, `phone`, `booking_type` (`'table' | 'event'`), `event_type`, `catering_package`, `guests`, `reservation_date`, `reservation_time`, and `notes`. Sets `status = 'pending'`.
 - **PATCH**: Updates reservation status (`status: 'confirmed' | 'cancelled'`) by `id`.
 - **DELETE**: Deletes a reservation by `id`.
 - *Supports Supabase `reservations` table with in-memory fallback for local dev.*
@@ -175,12 +224,15 @@ CREATE TABLE menu_items (
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
--- 3. Reservations
+-- 3. Reservations (Supports Tables & Events)
 CREATE TABLE reservations (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name TEXT NOT NULL,
   email TEXT NOT NULL,
   phone TEXT,
+  booking_type TEXT NOT NULL DEFAULT 'table' CHECK (booking_type IN ('table', 'event')),
+  event_type TEXT,
+  catering_package TEXT,
   guests TEXT NOT NULL,
   reservation_date DATE NOT NULL,
   reservation_time TEXT NOT NULL,

@@ -36,6 +36,20 @@ This file documents key milestones, context, architecture choices, and the curre
      - `/api/menu` — GET, POST, PUT, DELETE.
    - **Updated Documentation**: `Prd.md` and `Memory.md` updated to reflect the full feature set.
 
+5. **Phase 5 (Dual Booking Workflows & Menu Page Styling Fix)**:
+   - **Menu Page Visibility Fix**:
+     - Identified that `.menu-card` had cream text and translucent borders which had poor contrast inside `.page-content-section`'s default light background.
+     - Resolved by introducing `.menu-page-wrapper` (`background: var(--color-dark-bg)`), ensuring consistent dark espresso theming matching the Figma prototype.
+     - Verified via Chrome DevTools that all 25 menu items across 4 categories (Hot Drinks 7, Cold Drinks 6, Food 6, Sweet Treats 6) and search filtering render crisply.
+   - **Dual Booking Workflows (Book a Table vs Host an Event)**:
+     - Implemented an intuitive segmented switcher on `/book` and in `components/BookingModal.tsx`:
+       - **Mode A: Book a Table**: Catered to 1–8 guests for casual coffee, breakfast/lunch, or study sessions, with party size presets and seating preferences.
+       - **Mode B: Host an Event / Community Gathering**: Tailored for 8–50+ attendees for club meetings, creative workshops, sports committee debriefs, and private celebrations. Features dynamic event type selection, 4 catering package tiers (Morning Pastries €6.50/p, Lunch Sandwiches & Bites €12.50/p, Sweet Grazing Board €9.00/p, No Set Package), and AV/equipment setup options (Projector, PA/Mic, Flipchart).
+     - Full integration with `/api/reservations` and Supabase schema (`booking_type`, `event_type`, `catering_package`).
+     - Enhanced `/admin` dashboard: overview and bookings tables now display `[☕ Table]` and `[🎉 Event]` badges, event focus titles, and catering metadata in the slide-out detail drawer.
+   - **Updated Documentation**:
+     - `Prd.md` expanded with complete lifecycle workflows, data validation matrix, room tiers in Lucan Community Centre, and catering specifications.
+
 ---
 
 ## 2. Core Architectural Decisions
@@ -62,10 +76,12 @@ This file documents key milestones, context, architecture choices, and the curre
 ## 4. Current State & Verification
 
 - [x] Multi-route pages operational (`/`, `/menu`, `/about`, `/visit`, `/book`)
-- [x] Admin Login Portal operational (`/admin/login`)
-- [x] Admin Dashboard operational (`/admin`) with Overview, Bookings, Menu, Settings tabs
+- [x] `/menu` page items & categories 100% visible with espresso dark mode & live search
+- [x] Dual booking workflow live on `/book` & `BookingModal.tsx` ("Book a Table" vs "Host an Event")
+- [x] Admin Login Portal operational (`/admin/login`) with 1-click demo login
+- [x] Admin Dashboard operational (`/admin`) with Table vs Event badges & catering drawer
 - [x] Menu update options (Add, Edit, Delete, Stock toggle) live
 - [x] Booking management (List, Filter, Confirm, Cancel, Delete, Detail view) live
 - [x] Full CRUD API routes (`/api/reservations`, `/api/menu`)
 - [x] Production build passes with 0 errors (`npm run build`)
-- [x] `Prd.md` and `Memory.md` updated
+- [x] `Prd.md` and `Memory.md` updated with comprehensive booking workflow specs

@@ -46,7 +46,7 @@ export default function MenuPage() {
     <>
       <ScrollRevealInit />
       <Navbar />
-      <main className="page-wrapper">
+      <main className="page-wrapper menu-page-wrapper">
         <section className="page-hero">
           <div className="container">
             <p className="section-label">FRESHLY CRAFTED EVERY DAY</p>

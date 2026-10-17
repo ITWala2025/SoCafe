@@ -396,8 +396,18 @@ export default function AdminDashboardPage() {
                     {reservations.slice(0, 5).map((r) => (
                       <tr key={r.id}>
                         <td>
-                          <strong>{r.name}</strong>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
+                            <span className={`booking-badge-tag type-${r.booking_type || 'table'}`}>
+                              {r.booking_type === 'event' ? '🎉 Event' : '☕ Table'}
+                            </span>
+                            <strong>{r.name}</strong>
+                          </div>
                           <span className="cell-sub">{r.email}</span>
+                          {r.event_type && (
+                            <div style={{ fontSize: '0.8rem', color: '#8C6830', marginTop: '2px' }}>
+                              {r.event_type}
+                            </div>
+                          )}
                         </td>
                         <td>
                           {r.reservation_date} @ {r.reservation_time}
@@ -484,10 +494,10 @@ export default function AdminDashboardPage() {
                   <table className="admin-table">
                     <thead>
                       <tr>
-                        <th>Guest Name</th>
+                        <th>Type & Guest</th>
                         <th>Contact</th>
                         <th>Date & Time</th>
-                        <th>Guests</th>
+                        <th>Party Size</th>
                         <th>Status</th>
                         <th>Actions</th>
                       </tr>
@@ -499,7 +509,17 @@ export default function AdminDashboardPage() {
                           className={selectedBooking?.id === r.id ? 'row-selected' : ''}
                         >
                           <td>
-                            <strong>{r.name}</strong>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
+                              <span className={`booking-badge-tag type-${r.booking_type || 'table'}`}>
+                                {r.booking_type === 'event' ? '🎉 Event' : '☕ Table'}
+                              </span>
+                              <strong>{r.name}</strong>
+                            </div>
+                            {r.event_type && (
+                              <div style={{ fontSize: '0.8rem', color: '#8C6830' }}>
+                                {r.event_type}
+                              </div>
+                            )}
                           </td>
                           <td>
                             <div>{r.email}</div>
@@ -584,6 +604,24 @@ export default function AdminDashboardPage() {
                         {selectedBooking.status}
                       </span>
                     </div>
+                    <div className="detail-row">
+                      <span className="detail-label">Booking Type</span>
+                      <span className={`booking-badge-tag type-${selectedBooking.booking_type || 'table'}`}>
+                        {selectedBooking.booking_type === 'event' ? '🎉 Community Event' : '☕ Table Reservation'}
+                      </span>
+                    </div>
+                    {selectedBooking.event_type && (
+                      <div className="detail-row">
+                        <span className="detail-label">Event Focus</span>
+                        <strong>{selectedBooking.event_type}</strong>
+                      </div>
+                    )}
+                    {selectedBooking.catering_package && (
+                      <div className="detail-row">
+                        <span className="detail-label">Catering</span>
+                        <span style={{ fontSize: '0.85rem' }}>{selectedBooking.catering_package}</span>
+                      </div>
+                    )}
                     <div className="detail-row">
                       <span className="detail-label">Guest Name</span>
                       <strong>{selectedBooking.name}</strong>

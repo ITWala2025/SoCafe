@@ -70,6 +70,9 @@ export interface Database {
           name: string;
           email: string;
           phone: string | null;
+          booking_type: 'table' | 'event';
+          event_type: string | null;
+          catering_package: string | null;
           guests: string;
           reservation_date: string;
           reservation_time: string;
@@ -82,6 +85,9 @@ export interface Database {
           name: string;
           email: string;
           phone?: string | null;
+          booking_type?: 'table' | 'event';
+          event_type?: string | null;
+          catering_package?: string | null;
           guests: string;
           reservation_date: string;
           reservation_time: string;
@@ -94,6 +100,9 @@ export interface Database {
           name?: string;
           email?: string;
           phone?: string | null;
+          booking_type?: 'table' | 'event';
+          event_type?: string | null;
+          catering_package?: string | null;
           guests?: string;
           reservation_date?: string;
           reservation_time?: string;

@@ -9,6 +9,9 @@ let mockReservations: Reservation[] = [
     name: 'Sarah O’Connor',
     email: 'sarah.oc@example.ie',
     phone: '+353 87 234 5678',
+    booking_type: 'table',
+    event_type: null,
+    catering_package: null,
     guests: '3-4',
     reservation_date: new Date(Date.now() + 86400000).toISOString().split('T')[0],
     reservation_time: '10:30',
@@ -21,10 +24,13 @@ let mockReservations: Reservation[] = [
     name: 'Michael Byrne',
     email: 'm.byrne@dublin.ie',
     phone: '+353 85 999 1234',
-    guests: '5-8',
+    booking_type: 'event',
+    event_type: 'Lucan Community Committee Debrief',
+    catering_package: 'Coffee & Morning Pastries',
+    guests: '16-30',
     reservation_date: new Date(Date.now() + 172800000).toISOString().split('T')[0],
     reservation_time: '11:30',
-    notes: 'Lucan Community Centre committee debrief.',
+    notes: 'Community room hire with projector and coffee service.',
     status: 'confirmed',
     created_at: new Date(Date.now() - 86400000).toISOString(),
   },
@@ -33,6 +39,9 @@ let mockReservations: Reservation[] = [
     name: 'Aoife Higgins',
     email: 'aoife.higgins@gmail.com',
     phone: '+353 86 444 8822',
+    booking_type: 'table',
+    event_type: null,
+    catering_package: null,
     guests: '1-2',
     reservation_date: new Date().toISOString().split('T')[0],
     reservation_time: '14:30',
@@ -79,7 +88,18 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, email, phone, guests, reservation_date, reservation_time, notes } = body;
+    const {
+      name,
+      email,
+      phone,
+      guests,
+      reservation_date,
+      reservation_time,
+      notes,
+      booking_type,
+      event_type,
+      catering_package,
+    } = body;
 
     if (!name || !email || !reservation_date || !reservation_time) {
       return NextResponse.json(
@@ -92,6 +112,9 @@ export async function POST(request: Request) {
       name,
       email,
       phone: phone || null,
+      booking_type: booking_type === 'event' ? 'event' : 'table',
+      event_type: event_type || null,
+      catering_package: catering_package || null,
       guests: guests || '1-2',
       reservation_date,
       reservation_time,
@@ -130,6 +153,9 @@ export async function POST(request: Request) {
       name: reservationPayload.name,
       email: reservationPayload.email,
       phone: reservationPayload.phone || null,
+      booking_type: reservationPayload.booking_type || 'table',
+      event_type: reservationPayload.event_type || null,
+      catering_package: reservationPayload.catering_package || null,
       guests: reservationPayload.guests,
       reservation_date: reservationPayload.reservation_date,
       reservation_time: reservationPayload.reservation_time,

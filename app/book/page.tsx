@@ -11,11 +11,15 @@ import Link from 'next/link';
 export default function BookPage() {
   const { showToast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [bookingMode, setBookingMode] = useState<'table' | 'event'>('table');
   const [submittedData, setSubmittedData] = useState<{
     name: string;
+    bookingType: 'table' | 'event';
     guests: string;
     date: string;
     time: string;
+    eventType?: string;
+    cateringPackage?: string;
   } | null>(null);
 
   const [formData, setFormData] = useState({
@@ -25,6 +29,9 @@ export default function BookPage() {
     guests: '3-4',
     date: '',
     time: '10:30',
+    eventType: 'Community Gathering / Meetup',
+    cateringPackage: 'Barista Coffee & Fresh Morning Pastries (€6.50/person)',
+    avRequirements: 'None needed',
     notes: '',
   });
 
@@ -40,9 +47,21 @@ export default function BookPage() {
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
 
+  const handleModeSwitch = (mode: 'table' | 'event') => {
+    setBookingMode(mode);
+    setFormData((prev) => ({
+      ...prev,
+      guests: mode === 'table' ? '3-4' : '16-30',
+    }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+
+    const fullNotes = bookingMode === 'event'
+      ? `[AV/Setup: ${formData.avRequirements}] ${formData.notes}`
+      : formData.notes;
 
     try {
       const res = await fetch('/api/reservations', {
@@ -52,10 +71,13 @@ export default function BookPage() {
           name: formData.name,
           email: formData.email,
           phone: formData.phone,
+          booking_type: bookingMode,
+          event_type: bookingMode === 'event' ? formData.eventType : null,
+          catering_package: bookingMode === 'event' ? formData.cateringPackage : null,
           guests: formData.guests,
           reservation_date: formData.date,
           reservation_time: formData.time,
-          notes: formData.notes,
+          notes: fullNotes,
         }),
       });
 
@@ -64,12 +86,17 @@ export default function BookPage() {
       if (res.ok) {
         setSubmittedData({
           name: formData.name,
+          bookingType: bookingMode,
           guests: formData.guests,
           date: formData.date,
           time: formData.time,
+          eventType: bookingMode === 'event' ? formData.eventType : undefined,
+          cateringPackage: bookingMode === 'event' ? formData.cateringPackage : undefined,
         });
         showToast(
-          `Reservation request received for ${formData.name}! We look forward to seeing you.`,
+          bookingMode === 'table'
+            ? `Table request received for ${formData.name}! We look forward to seeing you.`
+            : `Event inquiry received for ${formData.name}! Our events coordinator will contact you.`,
           '🌿'
         );
         window.scrollTo({ top: 200, behavior: 'smooth' });
@@ -90,12 +117,12 @@ export default function BookPage() {
       <main className="page-wrapper">
         <section className="page-hero">
           <div className="container">
-            <p className="section-label">TABLE & COMMUNITY BOOKINGS</p>
+            <p className="section-label">RESERVATIONS & EVENT HOSTING</p>
             <h1 className="page-hero-title">Book a Space at So Coffee</h1>
             <p className="page-hero-desc">
-              Whether you&apos;re organizing a book club, bringing together a
-              volunteer group, or just securing a cosy table for coffee with friends —
-              let us know when you&apos;re coming and we&apos;ll have space ready.
+              Whether you&apos;re catching up over morning flat whites, or hosting a community workshop,
+              club meetup, or private celebration inside Lucan Community Centre — we have the cosy tables
+              and versatile spaces to make it memorable.
             </p>
           </div>
         </section>
@@ -105,18 +132,56 @@ export default function BookPage() {
             <div className="booking-page-grid">
               {/* Form Container */}
               <div className="booking-form-card reveal">
+                {/* Switcher */}
+                <div className="booking-mode-selector" role="tablist">
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-selected={bookingMode === 'table'}
+                    className={`booking-mode-btn ${bookingMode === 'table' ? 'active' : ''}`}
+                    onClick={() => handleModeSwitch('table')}
+                  >
+                    <span>☕</span> Book a Table
+                  </button>
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-selected={bookingMode === 'event'}
+                    className={`booking-mode-btn ${bookingMode === 'event' ? 'active' : ''}`}
+                    onClick={() => handleModeSwitch('event')}
+                  >
+                    <span>🎉</span> Host an Event / Gathering
+                  </button>
+                </div>
+
                 {submittedData ? (
                   <div className="booking-success-box">
                     <div className="success-icon">✓</div>
-                    <h2>Reservation Request Sent!</h2>
+                    <h2>
+                      {submittedData.bookingType === 'table'
+                        ? 'Table Reservation Request Received!'
+                        : 'Event Hosting Inquiry Received!'}
+                    </h2>
                     <p className="success-lead">
-                      Thank you, <strong>{submittedData.name}</strong>. We have
-                      logged your request for <strong>{submittedData.guests} people</strong> on{' '}
+                      Thank you, <strong>{submittedData.name}</strong>. We have logged your{' '}
+                      {submittedData.bookingType === 'table' ? 'table booking' : 'event proposal'} for{' '}
+                      <strong>{submittedData.guests} attendees</strong> on{' '}
                       <strong>{submittedData.date}</strong> at <strong>{submittedData.time}</strong>.
                     </p>
+                    {submittedData.bookingType === 'event' && (
+                      <div className="event-summary-badge" style={{ margin: '14px 0', padding: '12px', background: 'rgba(59,47,30,0.06)', borderRadius: '10px' }}>
+                        <p style={{ margin: '4px 0', fontSize: '0.9rem' }}>
+                          <strong>Event:</strong> {submittedData.eventType}
+                        </p>
+                        <p style={{ margin: '4px 0', fontSize: '0.9rem' }}>
+                          <strong>Catering:</strong> {submittedData.cateringPackage}
+                        </p>
+                      </div>
+                    )}
                     <p className="success-sub">
-                      Our café team at Lucan Community Centre will review your booking
-                      and send a confirmation to your email.
+                      {submittedData.bookingType === 'table'
+                        ? 'Our café team will review your booking and send a confirmation note to your email.'
+                        : 'Our café & Lucan Community Centre events manager will review room schedules and get back to you within 24 hours with room availability and bespoke catering details.'}
                     </p>
                     <div className="success-actions">
                       <button
@@ -128,31 +193,51 @@ export default function BookPage() {
                             name: '',
                             email: '',
                             phone: '',
-                            guests: '3-4',
+                            guests: bookingMode === 'table' ? '3-4' : '16-30',
                             date: new Date().toISOString().split('T')[0],
                             time: '10:30',
+                            eventType: 'Community Gathering / Meetup',
+                            cateringPackage: 'Barista Coffee & Fresh Morning Pastries (€6.50/person)',
+                            avRequirements: 'None needed',
                             notes: '',
                           });
                         }}
                       >
-                        Make Another Reservation
+                        Submit Another Booking
                       </button>
                       <Link href="/menu" className="btn-secondary">
-                        View Menu While You Wait
+                        Explore Our Menu While You Wait
                       </Link>
                     </div>
                   </div>
                 ) : (
                   <>
                     <div className="form-card-header">
-                      <h3>Reservation Details</h3>
-                      <p>Fill out the details below. We reply within 24 hours.</p>
+                      <h3>
+                        {bookingMode === 'table'
+                          ? 'Reserve Your Table'
+                          : 'Host Your Community Event'}
+                      </h3>
+                      <p>
+                        {bookingMode === 'table'
+                          ? 'Perfect for casual dining, catch-ups, and study sessions (1 to 8 guests).'
+                          : 'Host workshops, club meetings, committee debriefs, and private gatherings (8 to 50+ guests).'}
+                      </p>
                     </div>
+
+                    {bookingMode === 'event' && (
+                      <div className="booking-event-banner">
+                        <span className="icon">🏛️</span>
+                        <div>
+                          <strong>Community Spaces & Catering:</strong> We partner directly with Lucan Community Centre for flexible room configurations, audio/visual setups, and artisanal coffee and food catering.
+                        </div>
+                      </div>
+                    )}
 
                     <form className="modal-form" onSubmit={handleSubmit}>
                       <div className="form-row">
                         <div className="form-group">
-                          <label htmlFor="name">Full Name *</label>
+                          <label htmlFor="name">Primary Contact Name *</label>
                           <input
                             type="text"
                             id="name"
@@ -177,30 +262,110 @@ export default function BookPage() {
 
                       <div className="form-row">
                         <div className="form-group">
-                          <label htmlFor="phone">Phone Number</label>
+                          <label htmlFor="phone">Contact Phone Number *</label>
                           <input
                             type="tel"
                             id="phone"
+                            required
                             value={formData.phone}
                             onChange={handleChange}
                             placeholder="+353 87 123 4567"
                           />
                         </div>
-                        <div className="form-group">
-                          <label htmlFor="guests">Number of Guests *</label>
-                          <select
-                            id="guests"
-                            required
-                            value={formData.guests}
-                            onChange={handleChange}
-                          >
-                            <option value="1-2">1 – 2 People (Cosy corner table)</option>
-                            <option value="3-4">3 – 4 People (Standard table)</option>
-                            <option value="5-8">5 – 8 People (Large communal table)</option>
-                            <option value="9+">9+ People (Community room inquiry)</option>
-                          </select>
-                        </div>
+
+                        {bookingMode === 'table' ? (
+                          <div className="form-group">
+                            <label htmlFor="guests">Party Size *</label>
+                            <select
+                              id="guests"
+                              required
+                              value={formData.guests}
+                              onChange={handleChange}
+                            >
+                              <option value="1-2">1 – 2 People (Cosy table)</option>
+                              <option value="3-4">3 – 4 People (Standard table)</option>
+                              <option value="5-8">5 – 8 People (Large communal table)</option>
+                            </select>
+                          </div>
+                        ) : (
+                          <div className="form-group">
+                            <label htmlFor="guests">Expected Attendees *</label>
+                            <select
+                              id="guests"
+                              required
+                              value={formData.guests}
+                              onChange={handleChange}
+                            >
+                              <option value="8-15">8 – 15 People (Café Reserved Zone)</option>
+                              <option value="16-30">16 – 30 People (Multi-Purpose Suite)</option>
+                              <option value="31-50">31 – 50 People (Community Hall)</option>
+                              <option value="50+">50+ People (Large Event / Full Centre Hall)</option>
+                            </select>
+                          </div>
+                        )}
                       </div>
+
+                      {/* Event Specific Fields */}
+                      {bookingMode === 'event' && (
+                        <>
+                          <div className="form-row">
+                            <div className="form-group">
+                              <label htmlFor="eventType">Event / Gathering Type *</label>
+                              <select
+                                id="eventType"
+                                required
+                                value={formData.eventType}
+                                onChange={handleChange}
+                              >
+                                <option value="Community Gathering / Meetup">Community Group / Meetup</option>
+                                <option value="Book Club or Discussion Circle">Book Club / Discussion Circle</option>
+                                <option value="Workshop or Class">Workshop or Creative Class</option>
+                                <option value="Sports / Committee Debrief">Sports Club / Committee Meeting</option>
+                                <option value="Birthday or Family Celebration">Family Gathering or Birthday</option>
+                                <option value="Corporate or Remote Team Sync">Remote Work Team Sync</option>
+                              </select>
+                            </div>
+
+                            <div className="form-group">
+                              <label htmlFor="cateringPackage">Catering Package *</label>
+                              <select
+                                id="cateringPackage"
+                                required
+                                value={formData.cateringPackage}
+                                onChange={handleChange}
+                              >
+                                <option value="Barista Coffee & Fresh Morning Pastries (€6.50/person)">
+                                  Coffee & Morning Pastries (€6.50 / person)
+                                </option>
+                                <option value="Artisanal Lunch Sandwiches & Warm Bites (€12.50/person)">
+                                  Artisanal Lunch Sandwiches & Bites (€12.50 / person)
+                                </option>
+                                <option value="Sweet Treats & Coffee Grazing Board (€9.00/person)">
+                                  Sweet Treats Grazing Board (€9.00 / person)
+                                </option>
+                                <option value="No Catering / Guests Order Individually">
+                                  No Pre-Set Package (Guests Order Individually)
+                                </option>
+                              </select>
+                            </div>
+                          </div>
+
+                          <div className="form-group">
+                            <label htmlFor="avRequirements">AV & Equipment Setup</label>
+                            <select
+                              id="avRequirements"
+                              value={formData.avRequirements}
+                              onChange={handleChange}
+                            >
+                              <option value="None needed">No AV needed (Casual seating)</option>
+                              <option value="Projector & Display Screen">Projector & Display Screen</option>
+                              <option value="Microphone & Sound System">Microphone & PA Sound System</option>
+                              <option value="Flipchart & Whiteboard">Flipchart & Whiteboard</option>
+                              <option value="Full Setup (Projector + PA + Whiteboard)">Full AV Suite (Projector + PA + Whiteboard)</option>
+                            </select>
+                          </div>
+                        </>
+                      )}
 
                       <div className="form-row">
                         <div className="form-group">
@@ -214,7 +379,9 @@ export default function BookPage() {
                           />
                         </div>
                         <div className="form-group">
-                          <label htmlFor="time">Preferred Time *</label>
+                          <label htmlFor="time">
+                            {bookingMode === 'table' ? 'Preferred Time *' : 'Event Start Time *'}
+                          </label>
                           <select
                             id="time"
                             required
@@ -228,18 +395,28 @@ export default function BookPage() {
                             <option value="12:30">12:30 PM</option>
                             <option value="13:30">01:30 PM</option>
                             <option value="14:30">02:30 PM</option>
+                            <option value="16:00">04:00 PM (Evening Event)</option>
+                            <option value="18:00">06:00 PM (Evening Event)</option>
                           </select>
                         </div>
                       </div>
 
                       <div className="form-group">
-                        <label htmlFor="notes">Special Requests or Notes</label>
+                        <label htmlFor="notes">
+                          {bookingMode === 'table'
+                            ? 'Special Requests or Seating Preferences'
+                            : 'Additional Event Details & Setup Notes'}
+                        </label>
                         <textarea
                           id="notes"
-                          rows={4}
+                          rows={3}
                           value={formData.notes}
                           onChange={handleChange}
-                          placeholder="High chair needed, power outlet nearby, club topic, pre-ordered pastries, etc..."
+                          placeholder={
+                            bookingMode === 'table'
+                              ? 'High chair needed, power socket nearby, quiet window table, dietary notes...'
+                              : 'Tell us about the schedule, table layout (theatre vs boardroom), dietary requirements...'
+                          }
                         />
                       </div>
 
@@ -248,7 +425,11 @@ export default function BookPage() {
                         className="btn-submit booking-submit-btn"
                         disabled={isSubmitting}
                       >
-                        {isSubmitting ? 'Sending Request...' : 'Confirm Reservation Request'}
+                        {isSubmitting
+                          ? 'Submitting Request...'
+                          : bookingMode === 'table'
+                          ? 'Confirm Table Reservation Request'
+                          : 'Submit Event Hosting Proposal'}
                       </button>
                     </form>
                   </>
